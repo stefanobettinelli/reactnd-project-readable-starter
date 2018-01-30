@@ -50,6 +50,9 @@ class Nav extends React.Component {
           </div>
           <Divider />
           <List>
+            <ListItem button>
+              <ListItemText primary='all' />
+            </ListItem>
             {
               categories.length > 0
               &&
