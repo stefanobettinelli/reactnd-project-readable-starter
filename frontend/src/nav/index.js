@@ -20,23 +20,17 @@ const styles = theme => ({
   }
 });
 
-const CategoryList = () => (
-  <List>
-    <ListItem button>
-      <ListItemText primary="Trash" />
-    </ListItem>
-    <ListItem button>
-      <ListItemText primary="Spam" />
-    </ListItem>
-  </List>
-);
-
 class Nav extends React.Component {
+  state = {
+    categories: []
+  };
+
   componentDidMount() {
-    getAllCategories().then(categories => console.log(categories));
+    getAllCategories().then(categories => this.setState({ categories }));
   }
 
   render() {
+    const { categories } = this.state;
     const { classes, type, open, onClose, ModalProps } = this.props;
     return (
       <Drawer
@@ -55,7 +49,17 @@ class Nav extends React.Component {
           </Typography>
           </div>
           <Divider />
-          <CategoryList />
+          <List>
+            {
+              categories.length > 0
+              &&
+              categories.map(cat => (
+                <ListItem key={cat.name} button>
+                  <ListItemText primary={cat.name} />
+                </ListItem>
+              ))
+            }
+          </List>
         </div>
       </Drawer>
     );
