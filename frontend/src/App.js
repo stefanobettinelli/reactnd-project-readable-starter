@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
-import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
 import Dashboard from './dashboard';
-import CategoryList from './nav';
+import Nav from './nav';
 
 const drawerWidth = 240;
 
@@ -18,7 +16,6 @@ const styles = theme => ({
   root: {
     width: '100%',
     height: '100vh',
-    // marginTop: theme.spacing.unit * 3,
     zIndex: 1,
     overflow: 'hidden',
   },
@@ -40,7 +37,6 @@ const styles = theme => ({
       display: 'none',
     },
   },
-  drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
     width: 250,
     [theme.breakpoints.up('md')]: {
@@ -62,7 +58,7 @@ const styles = theme => ({
   },
 });
 
-class ResponsiveDrawer extends React.Component {
+class App extends React.Component {
   state = {
     mobileOpen: false,
   };
@@ -72,19 +68,7 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
-
-    const drawer = (
-      <div>
-        <div className={classes.drawerHeader} >
-          <Typography type="title">
-            Readable
-            </Typography>
-        </div>
-        <Divider />
-        <CategoryList />
-      </div>
-    );
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -105,31 +89,20 @@ class ResponsiveDrawer extends React.Component {
             </Toolbar>
           </AppBar>
           <Hidden mdUp>
-            <Drawer
+            <Nav
               type="temporary"
-              anchor={theme.direction === 'rtl' ? 'right' : 'left'}
               open={this.state.mobileOpen}
-              classes={{
-                paper: classes.drawerPaper,
-              }}
               onClose={this.handleDrawerToggle}
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
               }}
-            >
-              {drawer}
-            </Drawer>
+            />
           </Hidden>
           <Hidden smDown implementation="css">
-            <Drawer
+            <Nav
               type="permanent"
               open
-              classes={{
-                paper: classes.drawerPaper,
-              }}
-            >
-              {drawer}
-            </Drawer>
+            />
           </Hidden>
           <main className={classes.content}>
             <Dashboard />
@@ -140,9 +113,9 @@ class ResponsiveDrawer extends React.Component {
   }
 }
 
-ResponsiveDrawer.propTypes = {
+App.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default withStyles(styles, { withTheme: true })(App);
