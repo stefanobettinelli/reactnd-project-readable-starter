@@ -9,8 +9,8 @@ import IconButton from 'material-ui/IconButton';
 import Hidden from 'material-ui/Hidden';
 import Divider from 'material-ui/Divider';
 import MenuIcon from 'material-ui-icons/Menu';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import PostsBoard from './PostsBoard';
+import Dashboard from './dashboard';
+import CategoryList from './nav';
 
 const drawerWidth = 240;
 
@@ -77,30 +77,12 @@ class ResponsiveDrawer extends React.Component {
     const drawer = (
       <div>
         <div className={classes.drawerHeader} >
-          <ListItem button>
-            <Typography type="title">
-              Title
+          <Typography type="title">
+            Readable
             </Typography>
-          </ListItem>
         </div>
         <Divider />
-        <List component="nav">
-          <ListItem button>
-            <ListItemText primary="Trash" />
-          </ListItem>
-          <ListItem button component="a" href="#simple-list">
-            <ListItemText primary="Spam" />
-          </ListItem>
-        </List>
-        <Divider />
-        <List component="nav">
-          <ListItem button>
-            <ListItemText primary="Trash" />
-          </ListItem>
-          <ListItem button component="a" href="#simple-list">
-            <ListItemText primary="Spam" />
-          </ListItem>
-        </List>
+        <CategoryList />
       </div>
     );
 
@@ -150,7 +132,7 @@ class ResponsiveDrawer extends React.Component {
             </Drawer>
           </Hidden>
           <main className={classes.content}>
-            <PostsBoard />
+            <Dashboard />
           </main>
         </div>
       </div>
