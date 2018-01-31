@@ -9,6 +9,7 @@ import Hidden from 'material-ui/Hidden';
 import MenuIcon from 'material-ui-icons/Menu';
 import Dashboard from './dashboard';
 import Nav from './nav';
+import { getAllCategories } from './ReadableAPI';
 
 const drawerWidth = 240;
 
@@ -60,8 +61,13 @@ const styles = theme => ({
 
 class App extends React.Component {
   state = {
+    categories: [],
     mobileOpen: false,
   };
+
+  componentDidMount() {
+    getAllCategories().then(categories => this.setState({ categories }));
+  }
 
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
@@ -69,7 +75,7 @@ class App extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    const { categories } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -96,12 +102,14 @@ class App extends React.Component {
               ModalProps={{
                 keepMounted: true, // Better open performance on mobile.
               }}
+              categories={categories}
             />
           </Hidden>
           <Hidden smDown implementation="css">
             <Nav
               type="permanent"
               open
+              categories={categories}
             />
           </Hidden>
           <main className={classes.content}>
