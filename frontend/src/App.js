@@ -69,7 +69,6 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props);
     getAllCategories().then(categories => this.setState({ categories }));
     getAllPosts().then(posts => this.setState({ posts }));
   }
@@ -77,6 +76,12 @@ class App extends React.Component {
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      filter: nextProps.filter
+    });
+  }
 
   render() {    
     const { classes } = this.props;
