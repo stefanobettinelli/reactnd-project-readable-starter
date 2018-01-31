@@ -12,48 +12,29 @@ const styles = theme => ({
   }),
 });
 
-function PaperSheet(props) {
-  const { classes } = props;
-  return (
-    <div>
-      <Paper className={classes.root} elevation={4}>
-        <Typography type="headline" component="h3">
-          This is a sheet of paper.
-        </Typography>
-        <Typography component="p">
-          Paper can be used to build surface or other elements for your application.
-        </Typography>
-      </Paper>
-      <Paper className={classes.root} elevation={4}>
-        <Typography type="headline" component="h3">
-          This is a sheet of paper.
-        </Typography>
-        <Typography component="p">
-          Paper can be used to build surface or other elements for your application.
-        </Typography>
-      </Paper>
-      <Paper className={classes.root} elevation={4}>
-        <Typography type="headline" component="h3">
-          This is a sheet of paper.
-        </Typography>
-        <Typography component="p">
-          Paper can be used to build surface or other elements for your application.
-        </Typography>
-      </Paper>
-      <Paper className={classes.root} elevation={4}>
-        <Typography type="headline" component="h3">
-          This is a sheet of paper.
-        </Typography>
-        <Typography component="p">
-          Paper can be used to build surface or other elements for your application.
-        </Typography>
-      </Paper>
-    </div>
-  );
-}
+const Dashboard = ({ posts, classes, filter }) => (
+  <div>
+    {
+      posts.length > 0
+      &&
+      posts
+        .filter(post => filter === 'all' || post.category === filter)
+        .map(post => (
+          <Paper key={post.id} className={classes.root} elevation={4}>
+            <Typography type="headline" component="h3">
+              {post.title}
+            </Typography>
+            <Typography component="p">
+              {post.body}
+            </Typography>
+          </Paper>
+        ))
+    }
+  </div>
+);
 
-PaperSheet.propTypes = {
+Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PaperSheet);
+export default withStyles(styles)(Dashboard);

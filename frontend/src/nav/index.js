@@ -4,6 +4,8 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
+import { connect } from 'react-redux';
+import { selectCategory } from './actions';
 
 const drawerWidth = 240;
 
@@ -19,7 +21,7 @@ const styles = theme => ({
   }
 });
 
-const Nav = ({ classes, type, open, onClose, ModalProps, categories }) =>
+const Nav = ({ classes, type, open, onClose, ModalProps, categories, selectCategory }) =>
   (
     <Drawer
       type={type}
@@ -38,14 +40,14 @@ const Nav = ({ classes, type, open, onClose, ModalProps, categories }) =>
         </div>
         <Divider />
         <List>
-          <ListItem button>
+          <ListItem onClick={() => selectCategory('all')} button>
             <ListItemText primary='all' />
           </ListItem>
           {
             categories.length > 0
             &&
             categories.map(cat => (
-              <ListItem key={cat.name} button>
+              <ListItem key={cat.name} onClick={() => selectCategory(cat.name)} button>
                 <ListItemText primary={cat.name} />
               </ListItem>
             ))
@@ -55,4 +57,12 @@ const Nav = ({ classes, type, open, onClose, ModalProps, categories }) =>
     </Drawer>
   );
 
-export default withStyles(styles)(Nav);
+function mapDispatchToProps(dispatch) {
+  return {
+    selectCategory: (data) => dispatch(selectCategory(data))
+  }
+}
+
+const navComponent = withStyles(styles)(Nav);
+
+export default connect(null, mapDispatchToProps)(navComponent);

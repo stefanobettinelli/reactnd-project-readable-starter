@@ -9,7 +9,8 @@ import Hidden from 'material-ui/Hidden';
 import MenuIcon from 'material-ui-icons/Menu';
 import Dashboard from './dashboard';
 import Nav from './nav';
-import { getAllCategories } from './ReadableAPI';
+import { getAllCategories, getAllPosts } from './ReadableAPI';
+import { connect } from 'react-redux';
 
 const drawerWidth = 240;
 
@@ -62,20 +63,24 @@ const styles = theme => ({
 class App extends React.Component {
   state = {
     categories: [],
+    posts: [],
+    filter: 'all',
     mobileOpen: false,
   };
 
   componentDidMount() {
+    console.log(this.props);
     getAllCategories().then(categories => this.setState({ categories }));
+    getAllPosts().then(posts => this.setState({ posts }));
   }
 
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
 
-  render() {
+  render() {    
     const { classes } = this.props;
-    const { categories } = this.state;
+    const { categories, posts, filter } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -113,7 +118,7 @@ class App extends React.Component {
             />
           </Hidden>
           <main className={classes.content}>
-            <Dashboard />
+            <Dashboard posts={posts} filter={filter} />
           </main>
         </div>
       </div>
@@ -126,4 +131,11 @@ App.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(App);
+function mapStateToProp(state) {
+  const { filter } = state;
+  return { filter };
+}
+
+const MainApp = withStyles(styles, { withTheme: true })(App);
+
+export default connect(mapStateToProp)(MainApp);
