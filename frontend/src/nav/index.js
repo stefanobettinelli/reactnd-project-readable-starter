@@ -42,8 +42,10 @@ const Nav = ({ classes, type, open, onClose, ModalProps, categories, selectCateg
         <List>
           <ListItem onClick={() => selectCategory('all')} button>
             <ListItemText primary='all' />
-          </ListItem>
-          {
+          </ListItem>          
+          { 
+            categories
+            &&
             categories.length > 0
             &&
             categories.map(cat => (

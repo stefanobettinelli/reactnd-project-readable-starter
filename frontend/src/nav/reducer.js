@@ -1,7 +1,11 @@
-import { SELECT_CATEGORY } from './actions';
+import {
+  SELECT_CATEGORY,
+  RECEIVE_CATEGORIES,
+  REQUEST_CATEGORIES
+} from './actions';
 
-const nav = (state = 'all', action) => {
-  switch(action.type) {
+export const selectedCategory = (state = 'all', action) => {
+  switch (action.type) {
     case SELECT_CATEGORY:
       return action.categoryName;
     default:
@@ -9,4 +13,23 @@ const nav = (state = 'all', action) => {
   }
 };
 
-export default nav;
+export const categories = (
+  state = { isFetching: false, items: [] },
+  action
+) => {
+  switch (action.type) {
+    case REQUEST_CATEGORIES:
+      return {
+        isFetching: true,
+        item: [...state.items]
+      };
+    case RECEIVE_CATEGORIES: {
+      return {
+        isFetching: false,
+        items: action.categories
+      };
+    }
+    default:
+      return state;
+  }
+};
