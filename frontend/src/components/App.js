@@ -11,9 +11,11 @@ import MenuIcon from 'material-ui-icons/Menu';
 import Button from 'material-ui/Button';
 import Dashboard from '../dashboard';
 import Nav from '../nav';
+import { fetchCategories } from '../nav/actions';
 import { getAllCategories, getAllPosts } from '../ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
+import { categories } from '../nav/reducer';
 
 const drawerWidth = 240;
 
@@ -70,19 +72,23 @@ class App extends React.Component {
   state = {
     categories: [],
     posts: [],
-    filter: 'all',
+    selectedCategory: 'all',
     isPostEditorOpen: false,
     mobileOpen: false
   };
 
   componentDidMount() {
-    getAllCategories().then(categories => this.setState({ categories }));
+    // getAllCategories().then(categories => this.setState({ categories }));
+    const { dispatchGetAllCategories } = this.props;
+    dispatchGetAllCategories();
     getAllPosts().then(posts => this.setState({ posts }));
   }
 
   componentWillReceiveProps(nextProps) {
+    const {categories, selectedCategory} = nextProps;
     this.setState({
-      filter: nextProps.filter
+      selectedCategory,
+      categories: categories.items
     });
   }
 
@@ -100,7 +106,7 @@ class App extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { categories, posts, filter } = this.state;
+    const { categories, posts, selectedCategory } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -120,7 +126,7 @@ class App extends React.Component {
                 className={classes.flex}
                 noWrap
               >
-                {this.state.filter.toUpperCase()}
+                {this.state.selectedCategory.toUpperCase()}
               </Typography>
               <Button
                 fab
@@ -149,7 +155,7 @@ class App extends React.Component {
             <Nav type="permanent" open categories={categories} />
           </Hidden>
           <main className={classes.content}>
-            <Dashboard posts={posts} filter={filter} />
+            <Dashboard posts={posts} filter={selectedCategory} />
           </main>
         </div>
 
@@ -165,11 +171,16 @@ App.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-function mapStateToProp(state) {
-  const { filter } = state;
-  return { filter };
+function mapStateToProp({ selectedCategory, categories }) {  
+  return { selectedCategory, categories };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatchGetAllCategories: () => dispatch(fetchCategories())
+  }
 }
 
 const MainApp = withStyles(styles, { withTheme: true })(App);
 
-export default connect(mapStateToProp)(MainApp);
+export default connect(mapStateToProp, mapDispatchToProps)(MainApp);
