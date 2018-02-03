@@ -78,14 +78,13 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    // getAllCategories().then(categories => this.setState({ categories }));
     const { dispatchGetAllCategories } = this.props;
     dispatchGetAllCategories();
     getAllPosts().then(posts => this.setState({ posts }));
   }
 
   componentWillReceiveProps(nextProps) {
-    const {categories, selectedCategory} = nextProps;
+    const { categories, selectedCategory } = nextProps;
     this.setState({
       selectedCategory,
       categories: categories.items
@@ -100,8 +99,17 @@ class App extends React.Component {
     this.setState({ isPostEditorOpen: true });
   };
 
-  closePostEditor = () => {
-    this.setState({ isPostEditorOpen: false });
+  closePostEditor = modalFormValues => {
+    if (!modalFormValues) {
+      this.setState({ isPostEditorOpen: false });
+      return;
+    }
+    const { author, category, title, body } = modalFormValues;
+    if (!author || !category || !title || !body) {
+      this.setState({ isPostEditorOpen: false });
+      return;
+    }
+    console.log(`${author}, ${category}, ${title}, ${body},`);
   };
 
   render() {
@@ -160,7 +168,10 @@ class App extends React.Component {
         </div>
 
         {/* modal post creator */}
-        <PostEditor open={this.state.isPostEditorOpen} handleClose={this.closePostEditor}/>
+        <PostEditor
+          open={this.state.isPostEditorOpen}
+          handleClose={this.closePostEditor}
+        />
       </div>
     );
   }
@@ -171,14 +182,14 @@ App.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-function mapStateToProp({ selectedCategory, categories }) {  
+function mapStateToProp({ selectedCategory, categories }) {
   return { selectedCategory, categories };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatchGetAllCategories: () => dispatch(fetchCategories())
-  }
+  };
 }
 
 const MainApp = withStyles(styles, { withTheme: true })(App);
