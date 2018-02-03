@@ -12,10 +12,9 @@ import Button from 'material-ui/Button';
 import Dashboard from '../dashboard';
 import Nav from '../nav';
 import { fetchCategories } from '../nav/actions';
-import { getAllCategories, getAllPosts } from '../ReadableAPI';
+import { getAllPosts } from '../ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
-import { categories } from '../nav/reducer';
 
 const drawerWidth = 240;
 

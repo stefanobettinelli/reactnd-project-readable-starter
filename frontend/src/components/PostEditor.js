@@ -5,7 +5,7 @@ import TextField from 'material-ui/TextField';
 import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import Select from 'material-ui/Select';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl } from 'material-ui/Form';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -32,8 +32,7 @@ class FormDialog extends React.Component {
     author: '',
     category: '',
     title: '',
-    body: '',
-    category: ''
+    body: ''
   };
 
   resetForm = () => {
@@ -41,8 +40,7 @@ class FormDialog extends React.Component {
       author: '',
       category: '',
       title: '',
-      body: '',
-      category: ''
+      body: ''
     });
   };
 
