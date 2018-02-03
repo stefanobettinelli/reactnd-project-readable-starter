@@ -29,21 +29,38 @@ const styles = theme => ({
 
 class FormDialog extends React.Component {
   state = {
+    author: '',
+    category: '',
+    title: '',
+    body: '',
     category: ''
   };
 
+  resetForm = () => {
+    this.setState({
+      author: '',
+      category: '',
+      title: '',
+      body: '',
+      category: ''
+    });
+  };
+
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ category: event.target.value });
   };
 
   render() {
-    const { classes, open, handleClose } = this.props;
-
+    const { categories, classes, open, handleClose } = this.props;
+    const { author, category, title, body } = this.state;
     return (
       <form className={classes.container} autoComplete="off">
         <Dialog
           open={open}
-          onClose={handleClose}
+          onClose={() => {
+            this.resetForm();
+            handleClose();
+          }}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">New Post</DialogTitle>
@@ -58,6 +75,8 @@ class FormDialog extends React.Component {
               id="author"
               label="Author"
               fullWidth
+              onChange={event => this.setState({ author: event.target.value })}
+              value={author}
             />
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="category">Category</InputLabel>
@@ -66,9 +85,16 @@ class FormDialog extends React.Component {
                 onChange={this.handleChange}
                 input={<Input name="category" id="category-helper" />}
               >
-                <MenuItem value={10}>Ten</MenuItem>
+                {categories &&
+                  categories.length > 0 &&
+                  categories.map(cat => (
+                    <MenuItem key={cat.name} value={cat.name}>
+                      {cat.name}
+                    </MenuItem>
+                  ))}
+                {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
             </FormControl>
             <TextField
@@ -76,6 +102,8 @@ class FormDialog extends React.Component {
               id="title"
               label="Title"
               fullWidth
+              onChange={event => this.setState({ title: event.target.value })}
+              value={title}
             />
             <TextField
               multiline
@@ -84,13 +112,33 @@ class FormDialog extends React.Component {
               id="body"
               label="Body"
               fullWidth
+              onChange={event => this.setState({ body: event.target.value })}
+              value={body}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button
+              onClick={() => {
+                this.resetForm();
+                handleClose();
+              }}
+              color="primary"
+            >
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button
+              onClick={() => {
+                handleClose({ author, category, title, body });
+                this.resetForm();
+              }}
+              color="primary"
+              disabled={
+                !author ||
+                !category ||
+                !title ||
+                !body
+              }
+            >
               Submit
             </Button>
           </DialogActions>
@@ -100,10 +148,10 @@ class FormDialog extends React.Component {
   }
 }
 
-function mapStateToProp() {
-
+function mapStateToProp({ categories }) {
+  return { categories: categories.items };
 }
 
 const PostEditor = withStyles(styles)(FormDialog);
 
-export default connect()(PostEditor);
+export default connect(mapStateToProp)(PostEditor);
