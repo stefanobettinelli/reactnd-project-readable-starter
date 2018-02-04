@@ -12,9 +12,10 @@ import Button from 'material-ui/Button';
 import Dashboard from '../dashboard';
 import Nav from '../nav';
 import { fetchCategories } from '../nav/actions';
-import { getAllPosts } from '../ReadableAPI';
+import { getAllPosts, submitPost } from '../commons/ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
+import GetUUID from '../commons/Utils';
 
 const drawerWidth = 240;
 
@@ -108,7 +109,16 @@ class App extends React.Component {
       this.setState({ isPostEditorOpen: false });
       return;
     }
-    console.log(`${author}, ${category}, ${title}, ${body},`);
+    const newPost = {
+      author,
+      body,
+      category,
+      id: GetUUID(),
+      timestamp: Date.now(),
+      title
+    }
+    this.setState({ isPostEditorOpen: false });
+    submitPost(newPost);
   };
 
   render() {
