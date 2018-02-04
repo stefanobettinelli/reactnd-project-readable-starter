@@ -5,7 +5,8 @@ import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
 import { connect } from 'react-redux';
-import { selectCategory } from './actions';
+import { selectCategory } from './navActions';
+import { fetchPostsByCategory } from '../dashboard/dashboardActions';
 
 const drawerWidth = 240;
 
@@ -28,6 +29,7 @@ const Nav = ({
   onClose,
   ModalProps,
   categories,
+  selectedCategory,
   selectCategory
 }) => (
   <Drawer
@@ -45,18 +47,22 @@ const Nav = ({
       </div>
       <Divider />
       <List>
-        <ListItem onClick={() => selectCategory('all')} button>
+        <ListItem onClick={() => {
+          selectedCategory !== 'all' && selectCategory('all')
+          }} button>
           <ListItemText primary="all" />
         </ListItem>
         {categories &&
           categories.length > 0 &&
-          categories.map(cat => (
+          categories.map(category => (
             <ListItem
-              key={cat.name}
-              onClick={() => selectCategory(cat.name)}
+              key={category.name}
+              onClick={() => {
+                selectedCategory !== category.name && selectCategory(category.name)
+              }}
               button
             >
-              <ListItemText primary={cat.name} />
+              <ListItemText primary={category.name} />
             </ListItem>
           ))}
       </List>
@@ -64,12 +70,15 @@ const Nav = ({
   </Drawer>
 );
 
-function mapDispatchToProps(dispatch) {
-  return {
-    selectCategory: data => dispatch(selectCategory(data))
-  };
-}
+const mapStateToProps = ({selectedCategory}) => ({selectedCategory});
+
+const mapDispatchToProps = dispatch => ({
+  selectCategory: data => {
+    dispatch(selectCategory(data));
+    dispatch(fetchPostsByCategory(data));
+  }
+});
 
 const navComponent = withStyles(styles)(Nav);
 
-export default connect(null, mapDispatchToProps)(navComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(navComponent);
