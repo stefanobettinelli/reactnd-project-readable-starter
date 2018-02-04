@@ -85,7 +85,7 @@ class Post extends React.Component {
               </Button>
             </div>
           }
-          title={post.title}
+          title={`${post.title} CAT: ${post.category}`}
           subheader={post.timestamp}
         />
         {editMode ? (
