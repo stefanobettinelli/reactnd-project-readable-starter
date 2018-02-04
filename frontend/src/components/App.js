@@ -12,6 +12,7 @@ import Button from 'material-ui/Button';
 import Dashboard from '../dashboard';
 import Nav from '../nav';
 import { fetchCategories } from '../nav/actions';
+import { fetchPosts } from '../dashboard/actions';
 import { getAllPosts, submitPost } from '../commons/ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
@@ -76,16 +77,18 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    const { dispatchGetAllCategories } = this.props;
+    const { dispatchGetAllCategories, dispatchGetAllPosts } = this.props;
     dispatchGetAllCategories();
-    getAllPosts().then(posts => this.setState({ posts }));
+    dispatchGetAllPosts();
+    // getAllPosts().then(posts => this.setState({ posts }));
   }
 
   componentWillReceiveProps(nextProps) {
-    const { categories, selectedCategory } = nextProps;
+    const { categories, posts, selectedCategory } = nextProps;
     this.setState({
       selectedCategory,
-      categories: categories.items
+      categories: categories.items,
+      posts: posts.items
     });
   }
 
@@ -189,13 +192,14 @@ App.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-function mapStateToProp({ selectedCategory, categories }) {
-  return { selectedCategory, categories };
+function mapStateToProp({ selectedCategory, categories, posts }) {
+  return { selectedCategory, categories, posts };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatchGetAllCategories: () => dispatch(fetchCategories())
+    dispatchGetAllCategories: () => dispatch(fetchCategories()),
+    dispatchGetAllPosts: () => dispatch(fetchPosts())
   };
 }
 
