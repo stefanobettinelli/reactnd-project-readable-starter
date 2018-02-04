@@ -16,53 +16,58 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       position: 'relative',
-      height: '100vh',
-    },
+      height: '100vh'
+    }
   }
 });
 
-const Nav = ({ classes, type, open, onClose, ModalProps, categories, selectCategory }) =>
-  (
-    <Drawer
-      type={type}
-      open={open}
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-      onClose={onClose}
-      ModalProps={ModalProps}
-    >
-      <div>
-        <div className={classes.drawerHeader} >
-          <Typography type="title">
-            Readable
-          </Typography>
-        </div>
-        <Divider />
-        <List>
-          <ListItem onClick={() => selectCategory('all')} button>
-            <ListItemText primary='all' />
-          </ListItem>          
-          { 
-            categories
-            &&
-            categories.length > 0
-            &&
-            categories.map(cat => (
-              <ListItem key={cat.name} onClick={() => selectCategory(cat.name)} button>
-                <ListItemText primary={cat.name} />
-              </ListItem>
-            ))
-          }
-        </List>
+const Nav = ({
+  classes,
+  type,
+  open,
+  onClose,
+  ModalProps,
+  categories,
+  selectCategory
+}) => (
+  <Drawer
+    type={type}
+    open={open}
+    classes={{
+      paper: classes.drawerPaper
+    }}
+    onClose={onClose}
+    ModalProps={ModalProps}
+  >
+    <div>
+      <div className={classes.drawerHeader}>
+        <Typography type="title">Readable</Typography>
       </div>
-    </Drawer>
-  );
+      <Divider />
+      <List>
+        <ListItem onClick={() => selectCategory('all')} button>
+          <ListItemText primary="all" />
+        </ListItem>
+        {categories &&
+          categories.length > 0 &&
+          categories.map(cat => (
+            <ListItem
+              key={cat.name}
+              onClick={() => selectCategory(cat.name)}
+              button
+            >
+              <ListItemText primary={cat.name} />
+            </ListItem>
+          ))}
+      </List>
+    </div>
+  </Drawer>
+);
 
 function mapDispatchToProps(dispatch) {
   return {
-    selectCategory: (data) => dispatch(selectCategory(data))
-  }
+    selectCategory: data => dispatch(selectCategory(data))
+  };
 }
 
 const navComponent = withStyles(styles)(Nav);
