@@ -2,7 +2,7 @@ import {
   SELECT_CATEGORY,
   RECEIVE_CATEGORIES,
   REQUEST_CATEGORIES
-} from './actions';
+} from './navActions';
 
 export const selectedCategory = (state = 'all', action) => {
   switch (action.type) {

@@ -3,6 +3,8 @@ import { getAllCategories } from '../commons/ReadableAPI';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES';
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES';
+export const REQUEST_POSTS_BY_CATEGORY = 'REQUEST_POSTS_BY_CATEGORY';
+export const RECEIVE_POSTS_BY_CATEGORY = 'RECEIVE_POSTS_BY_CATEGORY';
 
 export const selectCategory = categoryName => ({
   type: SELECT_CATEGORY,
@@ -24,3 +26,8 @@ export const fetchCategories = () => dispatch => {
     dispatch(receiveCategories(categories))
   );
 };
+
+export const requestPostsByCategory = category => ({
+  type: REQUEST_POSTS_BY_CATEGORY,
+  category
+});

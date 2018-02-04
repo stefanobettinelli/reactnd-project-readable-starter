@@ -1,4 +1,4 @@
-import { REQUEST_POSTS, RECEIVE_POSTS } from './actions';
+import { REQUEST_POSTS, RECEIVE_POSTS } from './dashboardActions';
 
 const posts = (state = { isFetching: false, items: [] }, action) => {
   switch (action.type) {

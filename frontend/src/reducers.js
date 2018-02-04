@@ -1,5 +1,5 @@
-import { selectedCategory, categories } from './nav/reducer';
-import posts from './dashboard/reducer';
+import { selectedCategory, categories } from './nav/navReducer';
+import posts from './dashboard/dashboardReducer';
 import { combineReducers } from 'redux';
 
 export default combineReducers({

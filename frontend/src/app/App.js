@@ -11,12 +11,13 @@ import MenuIcon from 'material-ui-icons/Menu';
 import Button from 'material-ui/Button';
 import Dashboard from '../dashboard';
 import Nav from '../nav';
-import { fetchCategories } from '../nav/actions';
-import { fetchPosts } from '../dashboard/actions';
+import { fetchCategories } from '../nav/navActions';
+import { fetchPosts } from '../dashboard/dashboardActions';
 import { submitPost } from '../commons/ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
 import GetUUID from '../commons/Utils';
+import { postSubmitted } from './appActions';
 
 const drawerWidth = 240;
 
@@ -82,7 +83,7 @@ class App extends React.Component {
     dispatchGetAllPosts();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {    
     const { categories, posts, selectedCategory } = nextProps;
     this.setState({
       selectedCategory,
@@ -100,6 +101,7 @@ class App extends React.Component {
   };
 
   closePostEditor = modalFormValues => {
+    const { dispatchPostSubmitted } = this.props;
     if (!modalFormValues) {
       this.setState({ isPostEditorOpen: false });
       return;
@@ -118,7 +120,10 @@ class App extends React.Component {
       title
     };
     this.setState({ isPostEditorOpen: false });
-    submitPost(newPost);
+    submitPost(newPost).then(newPost => {
+      const {category} = this.state;
+      if(category === 'all' || newPost.category === category) dispatchPostSubmitted(newPost);
+    });
   };
 
   render() {
@@ -198,7 +203,8 @@ function mapStateToProp({ selectedCategory, categories, posts }) {
 function mapDispatchToProps(dispatch) {
   return {
     dispatchGetAllCategories: () => dispatch(fetchCategories()),
-    dispatchGetAllPosts: () => dispatch(fetchPosts())
+    dispatchGetAllPosts: () => dispatch(fetchPosts()),
+    dispatchPostSubmitted: (post) => dispatch(postSubmitted(post))
   };
 }
 
