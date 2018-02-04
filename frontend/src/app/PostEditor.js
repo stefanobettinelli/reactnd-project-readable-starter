@@ -79,9 +79,9 @@ class FormDialog extends React.Component {
               >
                 {categories &&
                   categories.length > 0 &&
-                  categories.map(cat => (
-                    <MenuItem key={cat.name} value={cat.name}>
-                      {cat.name}
+                  categories.map(category => (
+                    <MenuItem key={category.name} value={category.name}>
+                      {category.name}
                     </MenuItem>
                   ))}
                 {/* <MenuItem value={10}>Ten</MenuItem>
