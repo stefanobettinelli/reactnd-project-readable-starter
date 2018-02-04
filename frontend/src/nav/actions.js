@@ -1,4 +1,4 @@
-import { getAllCategories } from "../ReadableAPI";
+import { getAllCategories } from "../commons/ReadableAPI";
 
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const REQUEST_CATEGORIES = 'REQUEST_CATEGORIES';
