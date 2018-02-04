@@ -9,6 +9,14 @@ export const getAllCategories = () =>
 export const getAllPosts = () =>
   fetch(`${url}/posts`, { headers }).then(res => res.json());
 
+export const getAllPostsByCategory = category => {
+  if (category === 'all') return getAllPosts();
+  else
+    return fetch(`${url}/${category}/posts`, { headers }).then(res =>
+      res.json()
+    );
+};
+
 export const submitPost = post =>
   fetch(`${url}/posts`, {
     method: 'POST',
