@@ -118,7 +118,6 @@ const Dashboard = ({ posts, classes, filter }) => (
   <div>
     {posts.length > 0 &&
       posts
-        // .filter(post => filter === 'all' || post.category === filter)
         .map(post => <Post key={post.id} post={post} classes={classes} />)}
   </div>
 );
