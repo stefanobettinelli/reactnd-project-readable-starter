@@ -13,7 +13,7 @@ import Dashboard from '../dashboard';
 import Nav from '../nav';
 import { fetchCategories } from '../nav/actions';
 import { fetchPosts } from '../dashboard/actions';
-import { getAllPosts, submitPost } from '../commons/ReadableAPI';
+import { submitPost } from '../commons/ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
 import GetUUID from '../commons/Utils';
@@ -80,7 +80,6 @@ class App extends React.Component {
     const { dispatchGetAllCategories, dispatchGetAllPosts } = this.props;
     dispatchGetAllCategories();
     dispatchGetAllPosts();
-    // getAllPosts().then(posts => this.setState({ posts }));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -144,7 +143,7 @@ class App extends React.Component {
                 className={classes.flex}
                 noWrap
               >
-                {this.state.selectedCategory.toUpperCase()}
+                {selectedCategory.toUpperCase()}
               </Typography>
               <Button
                 fab
@@ -173,7 +172,7 @@ class App extends React.Component {
             <Nav type="permanent" open categories={categories} />
           </Hidden>
           <main className={classes.content}>
-            <Dashboard posts={posts} filter={selectedCategory} />
+            <Dashboard posts={posts} />
           </main>
         </div>
 
