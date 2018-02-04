@@ -55,18 +55,12 @@ class FormDialog extends React.Component {
       <form className={classes.container} autoComplete="off">
         <Dialog
           open={open}
-          onClose={() => {
-            this.resetForm();
-            handleClose();
-          }}
+          onClose={handleClose}
+          onEnter={() => this.resetForm()}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">New Post</DialogTitle>
           <DialogContent>
-            {/* <DialogContentText>
-              To subscribe to this website, please enter your email address
-              here. We will send updates occationally.
-            </DialogContentText> */}
             <TextField
               autoFocus
               margin="dense"
@@ -115,27 +109,15 @@ class FormDialog extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button
-              onClick={() => {
-                this.resetForm();
-                handleClose();
-              }}
-              color="primary"
-            >
+            <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
             <Button
               onClick={() => {
                 handleClose({ author, category, title, body });
-                this.resetForm();
               }}
               color="primary"
-              disabled={
-                !author ||
-                !category ||
-                !title ||
-                !body
-              }
+              disabled={!author || !category || !title || !body}
             >
               Submit
             </Button>
