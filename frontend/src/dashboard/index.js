@@ -2,13 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
-import { FormControl } from 'material-ui/Form';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
+import ExposurePlus1 from 'material-ui-icons/ExposurePlus1';
+import ExposureNeg1 from 'material-ui-icons/ExposureNeg1';
 import DeleteIcon from 'material-ui-icons/Delete';
-import Avatar from 'material-ui/Avatar';
-import Card, { CardHeader } from 'material-ui/Card';
+import IconButton from 'material-ui/IconButton';
+import Chip from 'material-ui/Chip';
+import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
+import { Debounce } from 'react-throttle';
+import { submitVotePost } from '../commons/ReadableAPI';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -48,20 +51,33 @@ const styles = theme => ({
 
 class Post extends React.Component {
   state = {
-    editMode: false
+    voteScore: 0
   };
+
+  componentDidMount() {
+    const { voteScore } = this.props.post;
+    this.setState({
+      voteScore
+    });
+  }
+
+  handleVote = (val, postId) => {
+    const nextVoteScore = this.state.voteScore + val;
+    this.setState({
+      voteScore: nextVoteScore
+    });
+    submitVotePost(val, postId);
+  }
 
   render() {
     const { post, classes } = this.props;
-    const { editMode } = this.state;
+    const { voteScore } = this.state;
+    const date = new Date(post.timestamp);
+    const formattedTimeStamp = `${date.getDate()}/${date.getMonth() +
+      1}/${date.getFullYear()}`;
     return (
       <Card className={classes.root}>
         <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              {post.author.slice(0, 1).toUpperCase()}
-            </Avatar>
-          }
           action={
             <div>
               <Button
@@ -70,7 +86,6 @@ class Post extends React.Component {
                 color="primary"
                 aria-label="edit"
                 className={classes.button}
-                onClick={() => this.setState({ editMode: !this.state.editMode })}
               >
                 <Icon>edit_icon</Icon>
               </Button>
@@ -85,30 +100,31 @@ class Post extends React.Component {
               </Button>
             </div>
           }
-          title={`${post.title} CAT: ${post.category}`}
-          subheader={post.timestamp}
+          title={`${post.title}`}
+          subheader={`${post.author} ${formattedTimeStamp} [CAT:${
+            post.category
+          }]`}
         />
-        {editMode ? (
-          <div className={classes.container}>
-            <FormControl className={classes.formControl}>
-              <TextField
-                multiline
-                rows="4"
-                defaultValue={post.body}
-                InputProps={{
-                  disableUnderline: true,
-                  classes: {
-                    input: classes.textFieldInput
-                  }
-                }}
-              />
-            </FormControl>
-          </div>
-        ) : (
-          <div>
-            <Typography component="p">{post.body}</Typography>
-          </div>
-        )}
+        <CardContent>
+          <Typography component="p">{post.body}</Typography>
+        </CardContent>
+        <CardActions className={classes.actions} disableActionSpacing>
+          <Chip label={voteScore} className={classes.chip} />
+          {/* <Debounce time="400" handler="onChange"> */}
+          <IconButton
+            onClick={() => this.handleVote(1, post.id)}
+            aria-label="Add to favorites"
+          >
+            <ExposurePlus1 />
+          </IconButton>
+          {/* </Debounce> */}
+          <IconButton
+            onClick={() => this.handleVote(-1, post.id)}
+            aria-label="Add to favorites"
+          >
+            <ExposureNeg1 />
+          </IconButton>
+        </CardActions>
       </Card>
     );
   }
@@ -117,8 +133,7 @@ class Post extends React.Component {
 const Dashboard = ({ posts, classes, filter }) => (
   <div>
     {posts.length > 0 &&
-      posts
-        .map(post => <Post key={post.id} post={post} classes={classes} />)}
+      posts.map(post => <Post key={post.id} post={post} classes={classes} />)}
   </div>
 );
 
