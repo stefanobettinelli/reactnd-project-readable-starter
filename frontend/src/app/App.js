@@ -13,11 +13,11 @@ import Dashboard from '../dashboard';
 import Nav from '../nav';
 import { fetchCategories } from '../nav/navActions';
 import { fetchPosts } from '../dashboard/dashboardActions';
-import { submitPost } from '../commons/ReadableAPI';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
 import GetUUID from '../commons/Utils';
-import { postSubmitted } from './appActions';
+import { submitNewPost } from './appActions';
+import { submitPost } from '../commons/ReadableAPI';
 
 const drawerWidth = 240;
 
@@ -83,7 +83,7 @@ class App extends React.Component {
     dispatchGetAllPosts();
   }
 
-  componentWillReceiveProps(nextProps) {    
+  componentWillReceiveProps(nextProps) {
     const { categories, posts, selectedCategory } = nextProps;
     this.setState({
       selectedCategory,
@@ -120,10 +120,11 @@ class App extends React.Component {
       title
     };
     this.setState({ isPostEditorOpen: false });
-    submitPost(newPost).then(newPost => {
-      const {category} = this.state;
-      if(category === 'all' || newPost.category === category) dispatchPostSubmitted(newPost);
-    });
+    const { selectedCategory } = this.state;
+    if (selectedCategory === 'all' || newPost.category === selectedCategory)
+      dispatchPostSubmitted(newPost);
+    else
+      submitPost(newPost);
   };
 
   render() {
@@ -204,7 +205,7 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatchGetAllCategories: () => dispatch(fetchCategories()),
     dispatchGetAllPosts: () => dispatch(fetchPosts()),
-    dispatchPostSubmitted: (post) => dispatch(postSubmitted(post))
+    dispatchPostSubmitted: post => dispatch(submitNewPost(post))
   };
 }
 
