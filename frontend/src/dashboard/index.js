@@ -67,7 +67,7 @@ class Post extends React.Component {
       voteScore: nextVoteScore
     });
     submitVotePost(val, postId);
-  }
+  };
 
   render() {
     const { post, classes } = this.props;
@@ -130,12 +130,15 @@ class Post extends React.Component {
   }
 }
 
-const Dashboard = ({ posts, classes, filter }) => (
-  <div>
-    {posts.length > 0 &&
-      posts.map(post => <Post key={post.id} post={post} classes={classes} />)}
-  </div>
-);
+const Dashboard = ({ posts, classes, filter }) => {
+  const postIds = Object.keys(posts);
+  return (
+    <div>
+      {posts &&
+        postIds.map(id => <Post key={id} post={posts[id]} classes={classes} />)}
+    </div>
+  );
+};
 
 Dashboard.propTypes = {
   classes: PropTypes.object.isRequired
