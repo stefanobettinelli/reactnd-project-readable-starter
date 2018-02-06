@@ -26,3 +26,13 @@ export const submitPost = post =>
     },
     body: JSON.stringify(post)
   }).then(res => res.json());
+
+export const submitVotePost = (voteScore, id) =>
+  fetch(`${url}/posts/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: voteScore > 0 ? JSON.stringify({ option: 'upVote' }) : JSON.stringify({ option: 'downVote' })
+  }).then(res => res.json());
