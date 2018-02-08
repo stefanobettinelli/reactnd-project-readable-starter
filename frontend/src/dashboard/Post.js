@@ -9,7 +9,6 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import IconButton from 'material-ui/IconButton';
 import Chip from 'material-ui/Chip';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import { Debounce } from 'react-throttle';
 import { connect } from 'react-redux';
 import { fetchChangedVotePost } from './dashboardActions';
 import { openPostEditor } from '../app/appActions';
@@ -66,14 +65,12 @@ const Post = props => {
       </CardContent>
       <CardActions className={classes.actions} disableActionSpacing>
         <Chip label={post.voteScore} className={classes.chip} />
-        {/* <Debounce time="400" handler="onChange"> */}
         <IconButton
           onClick={() => updateVoteToPost(1, post.id)}
           aria-label="Add to favorites"
         >
           <ExposurePlus1 />
         </IconButton>
-        {/* </Debounce> */}
         <IconButton
           onClick={() => updateVoteToPost(-1, post.id)}
           aria-label="Add to favorites"
