@@ -1,4 +1,9 @@
-import { REQUEST_POSTS, RECEIVE_POSTS } from './dashboardActions';
+import {
+  REQUEST_POSTS,
+  RECEIVE_POSTS,
+  RECEIVE_CHANGED_VOTE,
+  REQUEST_CHANGE_VOTE
+} from './dashboardActions';
 import {
   RECEIVE_POST_SUBMISSION_RESULT,
   REQUEST_POST_SUBMISSION
@@ -7,6 +12,8 @@ import {
 const posts = (state = { isFetching: false, items: {} }, action) => {
   switch (action.type) {
     case REQUEST_POSTS:
+    case REQUEST_POST_SUBMISSION:
+    case REQUEST_CHANGE_VOTE:
       return {
         isFetching: true,
         items: { ...state.items }
@@ -19,17 +26,21 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
           return acc;
         }, {})
       };
-    case REQUEST_POST_SUBMISSION:
-      return {
-        isFetching: true,
-        items: { ...state.items }
-      };
     case RECEIVE_POST_SUBMISSION_RESULT: {
       return {
         isFetching: false,
         items: {
           ...state.items,
           [action.submittedPost.id]: action.submittedPost
+        }
+      };
+    }
+    case RECEIVE_CHANGED_VOTE: {
+      return {
+        isFetching: false,
+        items: {
+          ...state.items,
+          [action.post.id]: action.post
         }
       };
     }

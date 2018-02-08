@@ -27,7 +27,6 @@ export const fetchCategories = () => dispatch => {
   );
 };
 
-export const requestPostsByCategory = category => ({
-  type: REQUEST_POSTS_BY_CATEGORY,
-  category
+export const requestPostsByCategory = () => ({
+  type: REQUEST_POSTS_BY_CATEGORY
 });

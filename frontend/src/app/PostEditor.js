@@ -11,7 +11,6 @@ import Dialog, {
   DialogContent,
   DialogTitle
 } from 'material-ui/Dialog';
-import { connect } from 'react-redux';
 
 const styles = theme => ({
   container: {
@@ -27,36 +26,37 @@ const styles = theme => ({
   }
 });
 
-class FormDialog extends React.Component {
+class PostEditor extends React.Component {
   state = {
-    author: '',
-    category: '',
-    title: '',
-    body: ''
+    post: {}
   };
 
-  resetForm = () => {
+  handleChange = event => {
+    const { post } = this.state;
+    this.setState({ post: { ...post, category: event.target.value } });
+  };
+
+  componentWillReceiveProps(nextProps) {
     this.setState({
+      post: nextProps.post
+    });
+  }
+
+  render() {
+    const { categories, classes, open, handleClose } = this.props;
+    const { post } = this.state;
+    const { author, category, title, body } = this.state.post || {
       author: '',
       category: '',
       title: '',
       body: ''
-    });
-  };
+    };
 
-  handleChange = event => {
-    this.setState({ category: event.target.value });
-  };
-
-  render() {
-    const { categories, classes, open, handleClose } = this.props;
-    const { author, category, title, body } = this.state;
     return (
       <form className={classes.container} autoComplete="off">
         <Dialog
           open={open}
           onClose={handleClose}
-          onEnter={() => this.resetForm()}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">New Post</DialogTitle>
@@ -67,20 +67,22 @@ class FormDialog extends React.Component {
               id="author"
               label="Author"
               fullWidth
-              onChange={event => this.setState({ author: event.target.value })}
-              value={author}
+              onChange={event =>
+                this.setState({ post: { ...post, author: event.target.value } })
+              }
+              value={author || ''}
             />
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="category">Category</InputLabel>
               <Select
-                value={this.state.category}
+                value={category || ''}
                 onChange={this.handleChange}
                 input={<Input name="category" id="category-helper" />}
               >
                 {categories &&
                   categories.length > 0 &&
                   categories.map(category => (
-                    <MenuItem key={category.name} value={category.name}>
+                    <MenuItem key={category.name} value={category.name || ''}>
                       {category.name}
                     </MenuItem>
                   ))}
@@ -91,8 +93,10 @@ class FormDialog extends React.Component {
               id="title"
               label="Title"
               fullWidth
-              onChange={event => this.setState({ title: event.target.value })}
-              value={title}
+              onChange={event =>
+                this.setState({ post: { ...post, title: event.target.value } })
+              }
+              value={title || ''}
             />
             <TextField
               multiline
@@ -101,8 +105,10 @@ class FormDialog extends React.Component {
               id="body"
               label="Body"
               fullWidth
-              onChange={event => this.setState({ body: event.target.value })}
-              value={body}
+              onChange={event =>
+                this.setState({ post: { ...post, body: event.target.value } })
+              }
+              value={body || ''}
             />
           </DialogContent>
           <DialogActions>
@@ -125,10 +131,6 @@ class FormDialog extends React.Component {
   }
 }
 
-function mapStateToProp({ categories }) {
-  return { categories: categories.items };
-}
+const postEditorComponent = withStyles(styles)(PostEditor);
 
-const PostEditor = withStyles(styles)(FormDialog);
-
-export default connect(mapStateToProp)(PostEditor);
+export default postEditorComponent;

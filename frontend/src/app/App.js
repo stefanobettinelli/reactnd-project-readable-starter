@@ -16,16 +16,18 @@ import { fetchPosts } from '../dashboard/dashboardActions';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
 import GetUUID from '../commons/Utils';
-import { submitNewPost } from './appActions';
+import { submitNewPost, openPostEditor, closePostEditor } from './appActions';
 import { submitPost } from '../commons/ReadableAPI';
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 
 const styles = theme => ({
   root: {
     width: '100%',
-    // zIndex: 1,
-    overflow: 'hidden'
+    // height: 430,
+    // marginTop: theme.spacing.unit * 3,
+    zIndex: 1,
+    overflow: 'hidden',
   },
   appFrame: {
     position: 'relative',
@@ -34,7 +36,7 @@ const styles = theme => ({
     height: '100%'
   },
   appBar: {
-    position: 'absolute',
+    position: 'fixed',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`
@@ -56,7 +58,7 @@ const styles = theme => ({
     }
   },
   content: {
-    // backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.default,
     width: '100%',
     padding: theme.spacing.unit * 3,
     height: 'calc(100% - 56px)',
@@ -73,7 +75,6 @@ class App extends React.Component {
     categories: [],
     posts: [],
     selectedCategory: 'all',
-    isPostEditorOpen: false,
     mobileOpen: false
   };
 
@@ -96,21 +97,18 @@ class App extends React.Component {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
 
-  openPostEditor = () => {
-    this.setState({ isPostEditorOpen: true });
+  isFieldMissing = modalFormValues => {
+    const { author, category, title, body } = modalFormValues;
+    return !modalFormValues || !author || !category || !title || !body;
   };
 
-  closePostEditor = modalFormValues => {
-    const { dispatchPostSubmitted } = this.props;
-    if (!modalFormValues) {
-      this.setState({ isPostEditorOpen: false });
+  handleClosePostEditor = modalFormValues => {
+    const { dispatchPostSubmitted, closePostEditor } = this.props;
+    if (this.isFieldMissing(modalFormValues)) {
+      closePostEditor();
       return;
     }
     const { author, category, title, body } = modalFormValues;
-    if (!author || !category || !title || !body) {
-      this.setState({ isPostEditorOpen: false });
-      return;
-    }
     const newPost = {
       author,
       body,
@@ -119,12 +117,12 @@ class App extends React.Component {
       timestamp: Date.now(),
       title
     };
-    this.setState({ isPostEditorOpen: false });
     const { selectedCategory } = this.state;
     if (selectedCategory === 'all' || newPost.category === selectedCategory)
+      // will trigger re-render in oder to see the new post on the dashboard
       dispatchPostSubmitted(newPost);
-    else
-      submitPost(newPost);
+    else submitPost(newPost);
+    closePostEditor();
   };
 
   render() {
@@ -156,7 +154,7 @@ class App extends React.Component {
                 mini
                 color="default"
                 aria-label="add"
-                onClick={() => this.openPostEditor()}
+                onClick={() => this.props.openPostEditor()}
                 className={classes.button}
               >
                 <AddIcon />
@@ -184,8 +182,10 @@ class App extends React.Component {
 
         {/* modal post creator */}
         <PostEditor
-          open={this.state.isPostEditorOpen}
-          handleClose={this.closePostEditor}
+          open={this.props.postEditor.open}
+          handleClose={this.handleClosePostEditor}
+          categories={this.props.categories.items}
+          post={this.props.postEditor.post}
         />
       </div>
     );
@@ -197,17 +197,25 @@ App.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-function mapStateToProp({ selectedCategory, categories, posts }) {
-  return { selectedCategory, categories, posts };
-}
+const mapStateToProp = ({
+  selectedCategory,
+  categories,
+  posts,
+  postEditor
+}) => ({
+  selectedCategory,
+  categories,
+  posts,
+  postEditor
+});
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatchGetAllCategories: () => dispatch(fetchCategories()),
-    dispatchGetAllPosts: () => dispatch(fetchPosts()),
-    dispatchPostSubmitted: post => dispatch(submitNewPost(post))
-  };
-}
+const mapDispatchToProps = dispatch => ({
+  dispatchGetAllCategories: () => dispatch(fetchCategories()),
+  dispatchGetAllPosts: () => dispatch(fetchPosts()),
+  dispatchPostSubmitted: post => dispatch(submitNewPost(post)),
+  openPostEditor: post => dispatch(openPostEditor(post)),
+  closePostEditor: () => dispatch(closePostEditor())
+});
 
 const MainApp = withStyles(styles, { withTheme: true })(App);
 

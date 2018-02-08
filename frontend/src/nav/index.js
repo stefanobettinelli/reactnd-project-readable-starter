@@ -8,16 +8,19 @@ import { connect } from 'react-redux';
 import { selectCategory } from './navActions';
 import { fetchPostsByCategory } from '../dashboard/dashboardActions';
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 
 const styles = theme => ({
+  root: {
+    position: 'fixed',
+    width:  drawerWidth
+  },
   drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
-    width: 250,
+    width: '100%',
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
-      position: 'relative',
-      height: '100vh'
+      position: 'relative'
     }
   }
 });
@@ -39,17 +42,22 @@ const Nav = ({
       paper: classes.drawerPaper
     }}
     onClose={onClose}
-    ModalProps={ModalProps}
+    ModalProps={{
+      keepMounted: true // Better open performance on mobile.
+    }}
   >
-    <div>
+    <div className={classes.root}>
       <div className={classes.drawerHeader}>
         <Typography type="title">Readable</Typography>
       </div>
       <Divider />
       <List>
-        <ListItem onClick={() => {
-          selectedCategory !== 'all' && selectCategory('all')
-          }} button>
+        <ListItem
+          onClick={() => {
+            selectedCategory !== 'all' && selectCategory('all');
+          }}
+          button
+        >
           <ListItemText primary="all" />
         </ListItem>
         {categories &&
@@ -58,7 +66,8 @@ const Nav = ({
             <ListItem
               key={category.name}
               onClick={() => {
-                selectedCategory !== category.name && selectCategory(category.name)
+                selectedCategory !== category.name &&
+                  selectCategory(category.name);
               }}
               button
             >
@@ -70,7 +79,7 @@ const Nav = ({
   </Drawer>
 );
 
-const mapStateToProps = ({selectedCategory}) => ({selectedCategory});
+const mapStateToProps = ({ selectedCategory }) => ({ selectedCategory });
 
 const mapDispatchToProps = dispatch => ({
   selectCategory: data => {
