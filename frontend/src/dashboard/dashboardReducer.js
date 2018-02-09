@@ -6,13 +6,16 @@ import {
 } from './dashboardActions';
 import {
   RECEIVE_POST_SUBMISSION_RESULT,
-  REQUEST_POST_SUBMISSION
+  REQUEST_POST_SUBMISSION,
+  REQUEST_EDIT_POST_SUBMISSION,
+  RECEIVE_EDITED_POST_SUBMISSION_RESULT
 } from '../app/appActions';
 
 const posts = (state = { isFetching: false, items: {} }, action) => {
   switch (action.type) {
     case REQUEST_POSTS:
     case REQUEST_POST_SUBMISSION:
+    case REQUEST_EDIT_POST_SUBMISSION:
     case REQUEST_CHANGE_VOTE:
       return {
         isFetching: true,
@@ -26,16 +29,9 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
           return acc;
         }, {})
       };
-    case RECEIVE_POST_SUBMISSION_RESULT: {
-      return {
-        isFetching: false,
-        items: {
-          ...state.items,
-          [action.submittedPost.id]: action.submittedPost
-        }
-      };
-    }
-    case RECEIVE_CHANGED_VOTE: {
+    case RECEIVE_CHANGED_VOTE:
+    case RECEIVE_POST_SUBMISSION_RESULT:
+    case RECEIVE_EDITED_POST_SUBMISSION_RESULT: {
       return {
         isFetching: false,
         items: {

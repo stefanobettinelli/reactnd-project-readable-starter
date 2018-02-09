@@ -16,8 +16,13 @@ import { fetchPosts } from '../dashboard/dashboardActions';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
 import GetUUID from '../commons/Utils';
-import { submitNewPost, openPostEditor, closePostEditor } from './appActions';
-import { submitPost } from '../commons/ReadableAPI';
+import {
+  submitNewPost,
+  submitEditedPost,
+  openPostEditor,
+  closePostEditor
+} from './appActions';
+import { postNewPost, putEditedPost } from '../commons/ReadableAPI';
 
 const drawerWidth = 150;
 
@@ -27,7 +32,7 @@ const styles = theme => ({
     // height: 430,
     // marginTop: theme.spacing.unit * 3,
     zIndex: 1,
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   appFrame: {
     position: 'relative',
@@ -102,26 +107,36 @@ class App extends React.Component {
     return !modalFormValues || !author || !category || !title || !body;
   };
 
-  handleClosePostEditor = modalFormValues => {
-    const { dispatchPostSubmitted, closePostEditor } = this.props;
-    if (this.isFieldMissing(modalFormValues)) {
+  handleClosePostEditor = (post, isNewPost) => {
+    const {
+      dispatchPostSubmitted,
+      dispatchEditedPostSubmitted,
+      closePostEditor
+    } = this.props;
+    if (this.isFieldMissing(post)) {
       closePostEditor();
       return;
     }
-    const { author, category, title, body } = modalFormValues;
-    const newPost = {
-      author,
-      body,
-      category,
-      id: GetUUID(),
-      timestamp: Date.now(),
-      title
-    };
+    const { author, category, title, body } = post;
+    const newPost = isNewPost
+      ? {
+          author,
+          body,
+          category,
+          id: GetUUID(),
+          timestamp: Date.now(),
+          title
+        }
+      : { ...post };
     const { selectedCategory } = this.state;
     if (selectedCategory === 'all' || newPost.category === selectedCategory)
       // will trigger re-render in oder to see the new post on the dashboard
-      dispatchPostSubmitted(newPost);
-    else submitPost(newPost);
+      isNewPost
+        ? dispatchPostSubmitted(newPost)
+        : dispatchEditedPostSubmitted(newPost);
+    else {
+      isNewPost ? postNewPost(newPost) : putEditedPost(newPost);
+    }
     closePostEditor();
   };
 
@@ -213,6 +228,7 @@ const mapDispatchToProps = dispatch => ({
   dispatchGetAllCategories: () => dispatch(fetchCategories()),
   dispatchGetAllPosts: () => dispatch(fetchPosts()),
   dispatchPostSubmitted: post => dispatch(submitNewPost(post)),
+  dispatchEditedPostSubmitted: post => dispatch(submitEditedPost(post)),
   openPostEditor: post => dispatch(openPostEditor(post)),
   closePostEditor: () => dispatch(closePostEditor())
 });

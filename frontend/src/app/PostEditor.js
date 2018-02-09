@@ -28,7 +28,8 @@ const styles = theme => ({
 
 class PostEditor extends React.Component {
   state = {
-    post: {}
+    post: {},
+    isNewPost: false
   };
 
   handleChange = event => {
@@ -37,14 +38,17 @@ class PostEditor extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
+    const {post} = nextProps;
     this.setState({
-      post: nextProps.post
+      post: post,
+      isNewPost:
+        !post || (Object.keys(post).length === 0 && post.constructor === Object)
     });
   }
 
   render() {
     const { categories, classes, open, handleClose } = this.props;
-    const { post } = this.state;
+    const { post, isNewPost } = this.state;
     const { author, category, title, body } = this.state.post || {
       author: '',
       category: '',
@@ -117,7 +121,7 @@ class PostEditor extends React.Component {
             </Button>
             <Button
               onClick={() => {
-                handleClose({ author, category, title, body });
+                handleClose(post, isNewPost);
               }}
               color="primary"
               disabled={!author || !category || !title || !body}

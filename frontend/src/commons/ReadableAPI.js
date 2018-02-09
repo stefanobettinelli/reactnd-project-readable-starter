@@ -17,7 +17,7 @@ export const getAllPostsByCategory = category => {
     );
 };
 
-export const submitPost = post =>
+export const postNewPost = post =>
   fetch(`${url}/posts`, {
     method: 'POST',
     headers: {
@@ -34,5 +34,28 @@ export const submitVotePost = (voteScore, id) =>
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: voteScore > 0 ? JSON.stringify({ option: 'upVote' }) : JSON.stringify({ option: 'downVote' })
+    body:
+      voteScore > 0
+        ? JSON.stringify({ option: 'upVote' })
+        : JSON.stringify({ option: 'downVote' })
   }).then(res => res.json());
+
+function handleErrors(response) {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response;
+}
+
+export const putEditedPost = post =>
+  fetch(`${url}/posts/${post.id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ title: post.title, body: post.body })
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));
