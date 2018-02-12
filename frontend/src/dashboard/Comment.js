@@ -1,17 +1,31 @@
 import React from 'react';
-import { CardContent } from 'material-ui/Card';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import Vote from './Vote';
+
+const styles = theme => ({
+  card: {
+    margin: '10px 0px 10px 0px',
+    backgroundColor: '#39CCCC'
+  }
+});
 
 const Comment = props => {
-  const { comment } = props;
+  const { comment, classes } = props;
   return (
-    <CardContent>
-      <Typography paragraph>
-        Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-        aside for 10 minutes.
-      </Typography>
-    </CardContent>
+    <Card className={classes.card}>
+      <CardContent>
+        <Typography paragraph>{comment.body}</Typography>
+        <Vote item={comment} updateVoteToItem={() => console.log('suka')} />
+      </CardContent>
+    </Card>
   );
 };
 
-export default Comment;
+Comment.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(Comment);

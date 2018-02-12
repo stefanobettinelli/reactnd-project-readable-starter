@@ -11,9 +11,22 @@ const comments = (state = { isFetching: false, items: {} }, action) => {
         items: { ...state.items }
       };
     case RECEIVE_POST_COMMENTS: {
-      console.log(action.comments);
+      const { comments } = action;
+      if (!comments || comments.length === 0) {
+        return {
+          isFetching: false,
+          items: { ...state.items }
+        };
+      }
       return {
-        isFetching: false
+        isFetching: false,
+        items: {
+          ...state.items,
+          [comments[0].parentId]: comments.reduce((acc, curr) => {
+            acc[curr.id] = curr;
+            return acc;
+          }, {})
+        }
       };
     }
 
