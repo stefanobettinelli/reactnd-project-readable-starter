@@ -8,7 +8,9 @@ import {
   RECEIVE_POST_SUBMISSION_RESULT,
   REQUEST_POST_SUBMISSION,
   REQUEST_EDIT_POST_SUBMISSION,
-  RECEIVE_EDITED_POST_SUBMISSION_RESULT
+  RECEIVE_EDITED_POST_SUBMISSION_RESULT,
+  REQUEST_DELETE_POST,
+  RECEIVE_DELETE_POST_RESULT
 } from '../app/appActions';
 
 const posts = (state = { isFetching: false, items: {} }, action) => {
@@ -16,6 +18,7 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
     case REQUEST_POSTS:
     case REQUEST_POST_SUBMISSION:
     case REQUEST_EDIT_POST_SUBMISSION:
+    case REQUEST_DELETE_POST:
     case REQUEST_CHANGE_VOTE:
       return {
         isFetching: true,
@@ -31,6 +34,7 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
       };
     case RECEIVE_CHANGED_VOTE:
     case RECEIVE_POST_SUBMISSION_RESULT:
+    case RECEIVE_DELETE_POST_RESULT:
     case RECEIVE_EDITED_POST_SUBMISSION_RESULT: {
       return {
         isFetching: false,

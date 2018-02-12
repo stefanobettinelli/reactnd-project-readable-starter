@@ -59,3 +59,21 @@ export const putEditedPost = post =>
     .then(handleErrors)
     .then(res => res.json())
     .catch(error => console.log(error));
+
+export const deletePost = post =>
+  fetch(`${url}/posts/${post.id}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ ...post, deleted: true })
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));
+
+// DELETE /posts/:id
+// USAGE:
+//   Sets the deleted flag for a post to 'true'.
+//   Sets the parentDeleted flag for all child comments to 'true'.

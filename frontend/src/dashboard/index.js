@@ -6,7 +6,9 @@ const Dashboard = ({ posts, filter }) => {
   return (
     <div>
       {posts &&
-        postIds.map(id => <Post key={id} post={posts[id]} />)}
+        postIds
+          .filter(id => !posts[id].deleted)
+          .map(id => <Post key={id} post={posts[id]} />)}
     </div>
   );
 };
