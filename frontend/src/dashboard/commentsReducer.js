@@ -1,10 +1,13 @@
 import {
   REQUEST_POST_COMMENTS,
-  RECEIVE_POST_COMMENTS
+  RECEIVE_POST_COMMENTS,
+  REQUEST_SUBMIT_COMMENT,
+  RECEIVE_SUBMIT_COMMENT_RESULT
 } from './dashboardActions';
 
 const comments = (state = { isFetching: false, items: {} }, action) => {
   switch (action.type) {
+    case REQUEST_SUBMIT_COMMENT:
     case REQUEST_POST_COMMENTS:
       return {
         isFetching: true,
@@ -29,7 +32,17 @@ const comments = (state = { isFetching: false, items: {} }, action) => {
         }
       };
     }
-
+    case RECEIVE_SUBMIT_COMMENT_RESULT:
+      return {
+        isFetching: false,
+        items: {
+          ...state.items,
+          [action.comment.parentId]: {
+            ...state.items[action.comment.parentId],
+            [action.comment.id]: action.comment
+          }
+        }
+      };
     default:
       return state;
   }

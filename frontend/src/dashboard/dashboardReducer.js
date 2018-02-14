@@ -2,7 +2,8 @@ import {
   REQUEST_POSTS,
   RECEIVE_POSTS,
   RECEIVE_CHANGED_VOTE,
-  REQUEST_CHANGE_VOTE
+  REQUEST_CHANGE_VOTE,
+  UPDATE_POST_COMMENT_COUNTER
 } from './dashboardActions';
 import {
   RECEIVE_POST_SUBMISSION_RESULT,
@@ -32,6 +33,17 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
           return acc;
         }, {})
       };
+    case UPDATE_POST_COMMENT_COUNTER:
+      return {
+        isFetching: false,
+        items: {
+          ...state.items,
+          [action.post.id]: {
+            ...state.items[action.post.id],
+            commentCount: state.items[action.post.id].commentCount + action.val
+          }
+        }
+      }
     case RECEIVE_CHANGED_VOTE:
     case RECEIVE_POST_SUBMISSION_RESULT:
     case RECEIVE_DELETE_POST_RESULT:

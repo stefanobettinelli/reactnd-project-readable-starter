@@ -91,7 +91,23 @@ export const getCommentsForPost = post =>
     .then(res => res.json())
     .catch(error => console.log(error));
 
-// DELETE /posts/:id
-// USAGE:
-//   Sets the deleted flag for a post to 'true'.
-//   Sets the parentDeleted flag for all child comments to 'true'.
+export const addCommentToPost = (comment, postId) =>
+  fetch(`${url}/comments`, {
+    method: 'POST',
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify(comment)
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));
+
+// POST /comments
+//   USAGE:
+//     Add a comment to a post
+
+//   PARAMS:
+//     id: Any unique ID. As with posts, UUID is probably the best here.
+//     timestamp: timestamp. Get this however you want.
+//     body: String
+//     author: String
+//     parentId: Should match a post id in the database.

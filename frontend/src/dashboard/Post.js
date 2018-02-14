@@ -4,19 +4,20 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import Icon from 'material-ui/Icon';
-import ExposurePlus1 from 'material-ui-icons/ExposurePlus1';
-import ExposureNeg1 from 'material-ui-icons/ExposureNeg1';
 import DeleteIcon from 'material-ui-icons/Delete';
-import IconButton from 'material-ui/IconButton';
 import TextField from 'material-ui/TextField';
-import Chip from 'material-ui/Chip';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
 import { connect } from 'react-redux';
-import { fetchChangedVotePost, fetchPostComments } from './dashboardActions';
+import {
+  fetchChangedVotePost,
+  fetchPostComments,
+  postComment,
+  updatePostCommentCounter
+} from './dashboardActions';
 import { openPostEditor, submitDeletePost } from '../app/appActions';
 import Comment from './Comment';
 import Vote from './Vote';
+import GetUUID from '../commons/Utils';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -33,13 +34,43 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: '100%',
+    width: '80%'
+  },
+  flex: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    flex: 1
   }
 });
 
 class Post extends React.Component {
   state = {
-    expanded: false
+    commentsExpanded: false,
+    commentAuthor: '',
+    commentText: ''
+  };
+
+  submitComment = ev => {
+    const { post, submitPostCommet, updatePostCommentCount } = this.props;
+    const { commentAuthor, commentText } = this.state;
+    if (ev.key === 'Enter' && !ev.shiftKey) {
+      ev.preventDefault();
+      const newComment = {
+        id: GetUUID(),
+        timestamp: Date.now(),
+        body: commentText,
+        author: commentAuthor,
+        parentId: post.id
+      };
+      if (commentAuthor && commentText) {
+        submitPostCommet(newComment).then(() =>
+          updatePostCommentCount(post, 1)
+        );
+        this.setState({
+          addCommentsExpanded: false
+        });
+      }
+    }
   };
 
   render() {
@@ -52,6 +83,7 @@ class Post extends React.Component {
       getPostComments,
       comments
     } = this.props;
+    const { commentsExpanded, commentText, commentAuthor } = this.state;
     const postComments = comments[post.id];
     const date = new Date(post.timestamp);
     const formattedTimeStamp = `${date.getDate()}/${date.getMonth() +
@@ -93,33 +125,60 @@ class Post extends React.Component {
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <Vote item={post} updateVoteToItem={updateVoteToPost} />
-          {post.commentCount > 0 && (
-            <Button
-              className={classes.expand}
-              onClick={() => {
+
+          <Button
+            className={classes.expand}
+            onClick={() => {
+              if (!commentsExpanded)
                 getPostComments(post).then(() =>
                   this.setState({
-                    expanded: !this.state.expanded
+                    commentsExpanded: true
                   })
                 );
-              }}
-            >
-              <Typography variant="caption" gutterBottom align="center">
-                {post.commentCount === 1
-                  ? `${post.commentCount} comment`
-                  : `${post.commentCount} comments`}
-              </Typography>
-            </Button>
-          )}
+              else
+                this.setState({
+                  commentsExpanded: false
+                });
+            }}
+          >
+            <Typography variant="caption" gutterBottom align="center">
+              {post.commentCount === 1
+                ? `${post.commentCount} comment`
+                : `${post.commentCount} comments`}
+            </Typography>
+          </Button>
         </CardActions>
-        <TextField
-          id="textarea"
-          placeholder="Write a comment..."
-          multiline
-          className={classes.textField}
-          margin="normal"
-        />
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>          
+        <Collapse in={commentsExpanded} timeout="auto" unmountOnExit>
+          <TextField
+            id="textarea"
+            error={this.state.commentAuthor.length === 0}
+            placeholder="Author"
+            className={classes.flex}
+            margin="normal"
+            value={commentAuthor}
+            onChange={ev => {
+              const text = ev.target.value;
+              this.setState({
+                commentAuthor: text
+              });
+            }}
+            onKeyPress={this.submitComment}
+          />
+          <TextField
+            id="textarea"
+            placeholder="Write a comment..."
+            error={this.state.commentText.length === 0}
+            value={commentText}
+            multiline
+            className={classes.textField}
+            onChange={ev => {
+              const text = ev.target.value;
+              this.setState({
+                commentText: text
+              });
+            }}
+            onKeyPress={this.submitComment}
+          />
           {postComments &&
             Object.keys(postComments).map(commentId => (
               <div key={commentId}>
@@ -143,7 +202,10 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchChangedVotePost(voteScore, postId)),
   openPostEditor: post => dispatch(openPostEditor(post)),
   deleteThePost: post => dispatch(submitDeletePost(post)),
-  getPostComments: post => dispatch(fetchPostComments(post))
+  getPostComments: post => dispatch(fetchPostComments(post)),
+  submitPostCommet: comment => dispatch(postComment(comment)),
+  updatePostCommentCount: (post, val) =>
+    dispatch(updatePostCommentCounter(post, val))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(postComponent);
