@@ -4,7 +4,7 @@ import './index.css';
 import App from './app/App';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 import thunk from 'redux-thunk';
 import reducer from './reducers';
 import registerServiceWorker from './registerServiceWorker';
@@ -14,7 +14,7 @@ const composedEnhancers =
 
 const store = createStore(
   reducer,
-  composedEnhancers(applyMiddleware(logger, thunk))
+  composedEnhancers(applyMiddleware(thunk))
 );
 
 ReactDOM.render(
