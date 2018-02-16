@@ -91,7 +91,7 @@ export const getCommentsForPost = post =>
     .then(res => res.json())
     .catch(error => console.log(error));
 
-export const addCommentToPost = (comment, postId) =>
+export const addCommentToPost = comment =>
   fetch(`${url}/comments`, {
     method: 'POST',
     headers: { ...headers, 'Content-Type': 'application/json' },
@@ -101,13 +101,12 @@ export const addCommentToPost = (comment, postId) =>
     .then(res => res.json())
     .catch(error => console.log(error));
 
-// POST /comments
-//   USAGE:
-//     Add a comment to a post
-
-//   PARAMS:
-//     id: Any unique ID. As with posts, UUID is probably the best here.
-//     timestamp: timestamp. Get this however you want.
-//     body: String
-//     author: String
-//     parentId: Should match a post id in the database.
+export const deleteCommentFromPost = comment =>
+  fetch(`${url}/comments/${comment.id}`, {
+    method: 'DELETE',
+    headers: {...headers, 'Content-Type': 'application/json'},
+    body: JSON.stringify(comment)
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));

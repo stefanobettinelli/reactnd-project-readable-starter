@@ -2,23 +2,26 @@ import {
   REQUEST_POST_COMMENTS,
   RECEIVE_POST_COMMENTS,
   REQUEST_SUBMIT_COMMENT,
-  RECEIVE_SUBMIT_COMMENT_RESULT
+  RECEIVE_SUBMIT_COMMENT_RESULT,
+  REQUEST_DELETE_COMMENT,
+  RECEIVE_DELETE_COMMENT_RESULT
 } from './dashboardActions';
 
 const comments = (state = { isFetching: false, items: {} }, action) => {
   switch (action.type) {
     case REQUEST_SUBMIT_COMMENT:
     case REQUEST_POST_COMMENTS:
+    case REQUEST_DELETE_COMMENT:
       return {
         isFetching: true,
-        items: { ...state.items }
+        ...state
       };
     case RECEIVE_POST_COMMENTS: {
       const { comments } = action;
       if (!comments || comments.length === 0) {
         return {
           isFetching: false,
-          items: { ...state.items }
+          ...state
         };
       }
       return {
@@ -30,6 +33,16 @@ const comments = (state = { isFetching: false, items: {} }, action) => {
             return acc;
           }, {})
         }
+      };
+    }
+    case RECEIVE_DELETE_COMMENT_RESULT: {
+      const comments = {...state.items};
+      const parentId = action.comment.parentId;
+      const commentId = action.comment.id;
+      comments[parentId][commentId].deleted = true;
+      return {
+        isFetching: false,
+        items: comments
       };
     }
     case RECEIVE_SUBMIT_COMMENT_RESULT:

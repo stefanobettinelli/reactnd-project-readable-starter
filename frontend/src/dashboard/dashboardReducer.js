@@ -38,9 +38,9 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
         isFetching: false,
         items: {
           ...state.items,
-          [action.post.id]: {
-            ...state.items[action.post.id],
-            commentCount: state.items[action.post.id].commentCount + action.val
+          [action.postId]: {
+            ...state.items[action.postId],
+            commentCount: state.items[action.postId].commentCount + action.val
           }
         }
       }

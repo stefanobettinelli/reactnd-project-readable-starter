@@ -18,6 +18,8 @@ import { openPostEditor, submitDeletePost } from '../app/appActions';
 import Comment from './Comment';
 import Vote from './Vote';
 import GetUUID from '../commons/Utils';
+import IconButton from 'material-ui/IconButton';
+import EditIcon from 'material-ui-icons/Edit';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -39,11 +41,6 @@ const styles = theme => ({
   textFieldAuthor: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit
-  },
-  flex: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    flex: 1
   }
 });
 
@@ -57,7 +54,7 @@ class Post extends React.Component {
   submitComment = ev => {
     const { post, submitPostCommet, updatePostCommentCount } = this.props;
     const { commentAuthor, commentText } = this.state;
-    if (ev.key === 'Enter' && !ev.shiftKey) {
+    if (ev.type === 'click' || (ev.key === 'Enter' && !ev.shiftKey)) {
       ev.preventDefault();
       const newComment = {
         id: GetUUID(),
@@ -67,11 +64,12 @@ class Post extends React.Component {
         parentId: post.id
       };
       if (commentAuthor && commentText) {
-        submitPostCommet(newComment).then(() =>
-          updatePostCommentCount(post, 1)
-        );
-        this.setState({
-          addCommentsExpanded: false
+        submitPostCommet(newComment).then(() => {
+          this.setState({
+            commentAuthor: '',
+            commentText: ''
+          });
+          updatePostCommentCount(post.id, 1);
         });
       }
     }
@@ -97,26 +95,18 @@ class Post extends React.Component {
         <CardHeader
           action={
             <div>
-              <Button
-                fab
-                mini
-                color="primary"
-                aria-label="edit"
+              <IconButton
                 onClick={() => openPostEditor(post)}
-                className={classes.button}
+                aria-label="Share"
               >
-                <Icon>edit_icon</Icon>
-              </Button>
-              <Button
-                fab
-                mini
-                color="secondary"
-                aria-label="delete"
+                <EditIcon />
+              </IconButton>
+              <IconButton
                 onClick={() => deleteThePost(post)}
-                className={classes.button}
+                aria-label="Share"
               >
                 <DeleteIcon />
-              </Button>
+              </IconButton>
             </div>
           }
           title={`${post.title}`}
@@ -146,9 +136,11 @@ class Post extends React.Component {
             }}
           >
             <Typography variant="caption" gutterBottom align="center">
-              {post.commentCount === 1
-                ? `${post.commentCount} comment`
-                : `${post.commentCount} comments`}
+              {post.commentCount === 0
+                ? 'Add a new Comment'
+                : post.commentCount === 1
+                  ? `${post.commentCount} comment`
+                  : `${post.commentCount} comments`}
             </Typography>
           </Button>
         </CardActions>
@@ -183,12 +175,15 @@ class Post extends React.Component {
             }}
             onKeyPress={this.submitComment}
           />
+          <Button onClick={this.submitComment}>Add</Button>
           {postComments &&
-            Object.keys(postComments).map(commentId => (
-              <div key={commentId}>
-                <Comment comment={postComments[commentId]} />
-              </div>
-            ))}
+            Object.keys(postComments)
+              .filter(commentId => !postComments[commentId].deleted)
+              .map(commentId => (
+                <div key={commentId}>
+                  <Comment comment={postComments[commentId]} />
+                </div>
+              ))}
         </Collapse>
       </Card>
     );
@@ -208,8 +203,8 @@ const mapDispatchToProps = dispatch => ({
   deleteThePost: post => dispatch(submitDeletePost(post)),
   getPostComments: post => dispatch(fetchPostComments(post)),
   submitPostCommet: comment => dispatch(postComment(comment)),
-  updatePostCommentCount: (post, val) =>
-    dispatch(updatePostCommentCounter(post, val))
+  updatePostCommentCount: (postId, val) =>
+    dispatch(updatePostCommentCounter(postId, val))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(postComponent);

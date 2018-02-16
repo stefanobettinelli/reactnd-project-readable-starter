@@ -13,11 +13,11 @@ const drawerWidth = 150;
 const styles = theme => ({
   root: {
     position: 'fixed',
-    width:  drawerWidth
+    width: drawerWidth
   },
   drawerHeader: theme.mixins.toolbar,
   drawerPaper: {
-    width: '100%',
+    width: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       position: 'relative'

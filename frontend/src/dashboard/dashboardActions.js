@@ -3,7 +3,8 @@ import {
   getAllPostsByCategory,
   submitVotePost,
   getCommentsForPost,
-  addCommentToPost
+  addCommentToPost,
+  deleteCommentFromPost
 } from '../commons/ReadableAPI';
 import { requestPostsByCategory } from '../nav/navActions';
 
@@ -16,6 +17,8 @@ export const RECEIVE_POST_COMMENTS = 'RECEIVE_POST_COMMENTS';
 export const REQUEST_SUBMIT_COMMENT = 'REQUEST_SUBMIT_COMMENT';
 export const RECEIVE_SUBMIT_COMMENT_RESULT = 'RECEIVE_SUBMIT_COMMENT_RESULT';
 export const UPDATE_POST_COMMENT_COUNTER = 'UPDATE_POST_COMMENT_COUNTER';
+export const REQUEST_DELETE_COMMENT = 'REQUEST_DELETE_COMMENT';
+export const RECEIVE_DELETE_COMMENT_RESULT = 'RECEIVE_DELETE_COMMENT_RESULT';
 
 const requestPosts = () => ({
   type: REQUEST_POSTS
@@ -39,9 +42,18 @@ const requestPostComments = () => ({
   type: REQUEST_POST_COMMENTS
 });
 
+const requestDeleteComment = () => ({
+  type: REQUEST_DELETE_COMMENT
+});
+
 const receivePostComments = comments => ({
   type: RECEIVE_POST_COMMENTS,
   comments
+});
+
+const deleteCommentResult = comment => ({
+  type: RECEIVE_DELETE_COMMENT_RESULT,
+  comment
 });
 
 const requestSubmitComment = () => ({
@@ -53,11 +65,11 @@ const receiveSubmitCommentResult = comment => ({
   comment
 });
 
-export const updatePostCommentCounter = (post, val) => ({
+export const updatePostCommentCounter = (postId, val) => ({
   type: UPDATE_POST_COMMENT_COUNTER,
-  post,
+  postId,
   val
-})
+});
 
 export const fetchPosts = () => dispatch => {
   dispatch(requestPosts());
@@ -88,8 +100,13 @@ export const fetchPostComments = post => dispatch => {
 export const postComment = comment => dispatch => {
   dispatch(requestSubmitComment());
   return addCommentToPost(comment).then(comment => {
-    // console.log('DIO PORCO RETURN SERVER => ', comment);
     return dispatch(receiveSubmitCommentResult(comment));
-  }
-  );
+  });
+};
+
+export const fetchDeleteComment = comment => dispatch => {
+  dispatch(requestDeleteComment());
+  return deleteCommentFromPost(comment).then(resComment => {
+    return dispatch(deleteCommentResult(resComment));
+  });
 };
