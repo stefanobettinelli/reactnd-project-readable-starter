@@ -34,7 +34,11 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: '80%'
+    width: '100%'
+  },
+  textFieldAuthor: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   flex: {
     marginLeft: theme.spacing.unit,
@@ -151,21 +155,6 @@ class Post extends React.Component {
         <Collapse in={commentsExpanded} timeout="auto" unmountOnExit>
           <TextField
             id="textarea"
-            error={this.state.commentAuthor.length === 0}
-            placeholder="Author"
-            className={classes.flex}
-            margin="normal"
-            value={commentAuthor}
-            onChange={ev => {
-              const text = ev.target.value;
-              this.setState({
-                commentAuthor: text
-              });
-            }}
-            onKeyPress={this.submitComment}
-          />
-          <TextField
-            id="textarea"
             placeholder="Write a comment..."
             error={this.state.commentText.length === 0}
             value={commentText}
@@ -175,6 +164,21 @@ class Post extends React.Component {
               const text = ev.target.value;
               this.setState({
                 commentText: text
+              });
+            }}
+            onKeyPress={this.submitComment}
+          />
+          <TextField
+            id="textarea"
+            error={this.state.commentAuthor.length === 0}
+            placeholder="Author"
+            className={classes.textFieldAuthor}
+            margin="normal"
+            value={commentAuthor}
+            onChange={ev => {
+              const text = ev.target.value;
+              this.setState({
+                commentAuthor: text
               });
             }}
             onKeyPress={this.submitComment}
