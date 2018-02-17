@@ -121,9 +121,7 @@ class Post extends React.Component {
             </div>
           }
           title={`${post.title}`}
-          subheader={`${post.author} ${formattedTimeStamp} [CAT:${
-            post.category
-          }]`}
+          subheader={`${post.author} ${formattedTimeStamp}`}
         />
         <CardContent>
           <Typography component="p">{post.body}</Typography>
