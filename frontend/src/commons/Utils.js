@@ -2,9 +2,9 @@
 Courtesy of jed => https://gist.github.com/jed/982883
 */
 
-function GetUUID(
+export const GetUUID = (
   a // placeholder
-) {
+) => {
   return a // if the placeholder was passed, return
     ? // a random number from 0 to 15
       (
@@ -27,6 +27,11 @@ function GetUUID(
           /[018]/g, // zeroes, ones, and eights with
           GetUUID // random hex digits
         );
-}
+};
 
-export default GetUUID;
+export const getFormattedDate = timestamp => {
+  const date = new Date(timestamp);
+  const formattedTimeStamp = `${date.getDate()}/${date.getMonth() +
+    1}/${date.getFullYear()}`;
+  return formattedTimeStamp;
+};

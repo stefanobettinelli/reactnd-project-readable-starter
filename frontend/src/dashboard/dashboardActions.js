@@ -4,7 +4,8 @@ import {
   submitVotePost,
   getCommentsForPost,
   addCommentToPost,
-  deleteCommentFromPost
+  deleteCommentFromPost,
+  putEditedComment
 } from '../commons/ReadableAPI';
 import { requestPostsByCategory } from '../nav/navActions';
 
@@ -109,4 +110,24 @@ export const fetchDeleteComment = comment => dispatch => {
   return deleteCommentFromPost(comment).then(resComment => {
     return dispatch(deleteCommentResult(resComment));
   });
+};
+
+// Edit comment
+export const REQUEST_EDIT_COMMENT = 'REQUEST_EDIT_COMMENT';
+export const RECEIVE_EDIT_COMMENT_RESULT = 'RECEIVE_EDIT_COMMENT_RESULT';
+
+const requestEditComment = () => ({
+  type: REQUEST_EDIT_COMMENT
+});
+
+const editCommentResult = comment => ({
+  type: RECEIVE_EDIT_COMMENT_RESULT,
+  comment
+});
+
+export const editComment = comment => dispatch => {
+  dispatch(requestEditComment());
+  return putEditedComment(comment).then(resComment =>
+    dispatch(editCommentResult(resComment))
+  );
 };

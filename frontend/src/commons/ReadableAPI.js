@@ -59,6 +59,7 @@ export const submitVotePost = (voteScore, id) =>
     .then(res => res.json())
     .catch(error => console.log(error));
 
+// Edit post
 export const putEditedPost = post =>
   fetch(`${url}/posts/${post.id}`, {
     method: 'PUT',
@@ -67,6 +68,20 @@ export const putEditedPost = post =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ title: post.title, body: post.body })
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));
+
+// Edit comment
+export const putEditedComment = comment =>
+  fetch(`${url}/comments/${comment.id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ timestamp: comment.timestamp, body: comment.body })
   })
     .then(handleErrors)
     .then(res => res.json())

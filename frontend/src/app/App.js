@@ -15,7 +15,7 @@ import { fetchCategories } from '../nav/navActions';
 import { fetchPosts } from '../dashboard/dashboardActions';
 import { connect } from 'react-redux';
 import PostEditor from './PostEditor';
-import GetUUID from '../commons/Utils';
+import { GetUUID } from '../commons/Utils';
 import {
   submitNewPost,
   submitEditedPost,

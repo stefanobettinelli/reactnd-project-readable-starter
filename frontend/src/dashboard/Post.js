@@ -12,12 +12,13 @@ import {
   fetchChangedVotePost,
   fetchPostComments,
   postComment,
-  updatePostCommentCounter
+  updatePostCommentCounter,
+  fetchDeleteComment
 } from './dashboardActions';
 import { openPostEditor, submitDeletePost } from '../app/appActions';
 import Comment from './Comment';
 import Vote from './Vote';
-import GetUUID from '../commons/Utils';
+import {GetUUID, getFormattedDate } from '../commons/Utils';
 import IconButton from 'material-ui/IconButton';
 import EditIcon from 'material-ui-icons/Edit';
 
@@ -51,6 +52,11 @@ class Post extends React.Component {
     commentText: ''
   };
 
+  componentDidMount() {
+    const {getPostComments, post} = this.props;
+    getPostComments(post);
+  }
+
   submitComment = ev => {
     const { post, submitPostCommet, updatePostCommentCount } = this.props;
     const { commentAuthor, commentText } = this.state;
@@ -83,13 +89,12 @@ class Post extends React.Component {
       openPostEditor,
       deleteThePost,
       getPostComments,
-      comments
+      comments,
+      deletePostComments
     } = this.props;
     const { commentsExpanded, commentText, commentAuthor } = this.state;
     const postComments = comments[post.id];
-    const date = new Date(post.timestamp);
-    const formattedTimeStamp = `${date.getDate()}/${date.getMonth() +
-      1}/${date.getFullYear()}`;
+    const formattedTimeStamp = getFormattedDate(post.timestamp);
     return (
       <Card className={classes.root}>
         <CardHeader
@@ -97,13 +102,19 @@ class Post extends React.Component {
             <div>
               <IconButton
                 onClick={() => openPostEditor(post)}
-                aria-label="Share"
+                aria-label="Edit"
               >
                 <EditIcon />
               </IconButton>
               <IconButton
-                onClick={() => deleteThePost(post)}
-                aria-label="Share"
+                onClick={() => {
+                  const commentList = Object.keys(postComments).map(
+                    id => postComments[id]
+                  );
+                  deleteThePost(post);
+                  deletePostComments(commentList);
+                }}
+                aria-label="Delete"
               >
                 <DeleteIcon />
               </IconButton>
@@ -204,7 +215,11 @@ const mapDispatchToProps = dispatch => ({
   getPostComments: post => dispatch(fetchPostComments(post)),
   submitPostCommet: comment => dispatch(postComment(comment)),
   updatePostCommentCount: (postId, val) =>
-    dispatch(updatePostCommentCounter(postId, val))
+    dispatch(updatePostCommentCounter(postId, val)),
+  deletePostComments: comments =>
+    comments.forEach(comment => {
+      dispatch(fetchDeleteComment(comment));
+    })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(postComponent);

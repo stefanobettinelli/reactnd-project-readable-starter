@@ -38,7 +38,7 @@ class PostEditor extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const {post} = nextProps;
+    const { post } = nextProps;
     this.setState({
       post: post,
       isNewPost:
@@ -67,6 +67,7 @@ class PostEditor extends React.Component {
           <DialogContent>
             <TextField
               autoFocus
+              disabled={!isNewPost}
               margin="dense"
               id="author"
               label="Author"
@@ -79,6 +80,7 @@ class PostEditor extends React.Component {
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="category">Category</InputLabel>
               <Select
+                disabled={!isNewPost}
                 value={category || ''}
                 onChange={this.handleChange}
                 input={<Input name="category" id="category-helper" />}
