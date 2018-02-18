@@ -3,7 +3,6 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
-import Icon from 'material-ui/Icon';
 import DeleteIcon from 'material-ui-icons/Delete';
 import TextField from 'material-ui/TextField';
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';

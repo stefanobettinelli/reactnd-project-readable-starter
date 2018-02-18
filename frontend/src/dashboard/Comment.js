@@ -5,7 +5,6 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import Vote from './Vote';
 import { connect } from 'react-redux';
-import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 import Button from 'material-ui/Button';
 import DeleteIcon from 'material-ui-icons/Delete';
@@ -48,7 +47,7 @@ class Comment extends React.Component {
   }
 
   submitEdit = event => {
-    const { editMode, comment } = this.state;
+    const { comment } = this.state;
     const { submitEditedComment } = this.props;
     submitEditedComment(comment).then(() => this.setState({ editMode: false }));
   };
