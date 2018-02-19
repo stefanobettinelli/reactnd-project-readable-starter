@@ -1,5 +1,5 @@
 import React from 'react';
-import Post from './Post';
+import DashboardPost from './containers/DashboardPost';
 
 const Dashboard = ({ posts, filter }) => {
   const postIds = Object.keys(posts);
@@ -8,7 +8,7 @@ const Dashboard = ({ posts, filter }) => {
       {posts &&
         postIds
           .filter(id => !posts[id].deleted)
-          .map(id => <Post key={id} post={posts[id]} />)}
+          .map(id => <DashboardPost key={id} post={posts[id]} />)}
     </div>
   );
 };

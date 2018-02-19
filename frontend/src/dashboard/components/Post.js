@@ -5,21 +5,12 @@ import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import DeleteIcon from 'material-ui-icons/Delete';
 import TextField from 'material-ui/TextField';
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
-import { connect } from 'react-redux';
-import {
-  fetchChangedVotePost,
-  fetchPostComments,
-  postComment,
-  updatePostCommentCounter,
-  fetchDeleteComment
-} from './dashboardActions';
-import { openPostEditor, submitDeletePost } from '../app/appActions';
-import Comment from './Comment';
-import Vote from './Vote';
-import {GetUUID, getFormattedDate } from '../commons/Utils';
 import IconButton from 'material-ui/IconButton';
 import EditIcon from 'material-ui-icons/Edit';
+import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
+import Vote from '../components/Vote';
+import { getFormattedDate } from '../../commons/Utils';
+import PostComment from '../containers/PostComment';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -51,35 +42,6 @@ class Post extends React.Component {
     commentText: ''
   };
 
-  componentDidMount() {
-    const {getPostComments, post} = this.props;
-    getPostComments(post);
-  }
-
-  submitComment = ev => {
-    const { post, submitPostCommet, updatePostCommentCount } = this.props;
-    const { commentAuthor, commentText } = this.state;
-    if (ev.type === 'click' || (ev.key === 'Enter' && !ev.shiftKey)) {
-      ev.preventDefault();
-      const newComment = {
-        id: GetUUID(),
-        timestamp: Date.now(),
-        body: commentText,
-        author: commentAuthor,
-        parentId: post.id
-      };
-      if (commentAuthor && commentText) {
-        submitPostCommet(newComment).then(() => {
-          this.setState({
-            commentAuthor: '',
-            commentText: ''
-          });
-          updatePostCommentCount(post.id, 1);
-        });
-      }
-    }
-  };
-
   render() {
     const {
       post,
@@ -88,12 +50,13 @@ class Post extends React.Component {
       openPostEditor,
       deleteThePost,
       getPostComments,
-      comments,
-      deletePostComments
+      postComments,
+      deletePostComments,
+      submitComment
     } = this.props;
     const { commentsExpanded, commentText, commentAuthor } = this.state;
-    const postComments = comments[post.id];
     const formattedTimeStamp = getFormattedDate(post.timestamp);
+
     return (
       <Card className={classes.root}>
         <CardHeader
@@ -134,7 +97,9 @@ class Post extends React.Component {
               if (!commentsExpanded)
                 getPostComments(post).then(() =>
                   this.setState({
-                    commentsExpanded: true
+                    commentsExpanded: true,
+                    commentAuthor: '',
+                    commentText: ''
                   })
                 );
               else
@@ -156,7 +121,7 @@ class Post extends React.Component {
           <TextField
             id="textarea"
             placeholder="Write a comment..."
-            error={this.state.commentText.length === 0}
+            error={commentText.length === 0}
             value={commentText}
             multiline
             className={classes.textField}
@@ -166,11 +131,13 @@ class Post extends React.Component {
                 commentText: text
               });
             }}
-            onKeyPress={this.submitComment}
+            onKeyPress={event =>
+              submitComment(event, commentAuthor, commentText)
+            }
           />
           <TextField
             id="textarea"
-            error={this.state.commentAuthor.length === 0}
+            error={commentAuthor.length === 0}
             placeholder="Author"
             className={classes.textFieldAuthor}
             margin="normal"
@@ -181,15 +148,21 @@ class Post extends React.Component {
                 commentAuthor: text
               });
             }}
-            onKeyPress={this.submitComment}
+            onKeyPress={event =>
+              submitComment(event, commentAuthor, commentText)
+            }
           />
-          <Button onClick={this.submitComment}>Add</Button>
+          <Button
+            onClick={event => submitComment(event, commentAuthor, commentText)}
+          >
+            Add
+          </Button>
           {postComments &&
             Object.keys(postComments)
               .filter(commentId => !postComments[commentId].deleted)
               .map(commentId => (
                 <div key={commentId}>
-                  <Comment comment={postComments[commentId]} />
+                  <PostComment comment={postComments[commentId]} />
                 </div>
               ))}
         </Collapse>
@@ -198,25 +171,4 @@ class Post extends React.Component {
   }
 }
 
-const postComponent = withStyles(styles)(Post);
-
-const mapStateToProps = ({ comments }) => ({
-  comments: comments.items
-});
-
-const mapDispatchToProps = dispatch => ({
-  updateVoteToPost: (voteScore, postId) =>
-    dispatch(fetchChangedVotePost(voteScore, postId)),
-  openPostEditor: post => dispatch(openPostEditor(post)),
-  deleteThePost: post => dispatch(submitDeletePost(post)),
-  getPostComments: post => dispatch(fetchPostComments(post)),
-  submitPostCommet: comment => dispatch(postComment(comment)),
-  updatePostCommentCount: (postId, val) =>
-    dispatch(updatePostCommentCounter(postId, val)),
-  deletePostComments: comments =>
-    comments.forEach(comment => {
-      dispatch(fetchDeleteComment(comment));
-    })
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(postComponent);
+export default withStyles(styles)(Post);
