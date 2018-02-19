@@ -12,9 +12,10 @@ class CategoryListContainer extends React.Component {
   }
 
   render() {
-    console.log(categories);
     const {
+      type,
       open,
+      onClose,
       categories,
       selectedCategory,
       selectCategory // on category select
@@ -22,11 +23,11 @@ class CategoryListContainer extends React.Component {
     return (
       <CategoryList
         open={open}
-        onClose={this.handleDrawerToggle}
+        onClose={onClose}
         categories={categories}
-        selectedCategory={selectCategory}
+        selectedCategory={selectedCategory}
         selectCategory={selectCategory}
-        type="temporary"
+        type={type}
       />
     );
   }

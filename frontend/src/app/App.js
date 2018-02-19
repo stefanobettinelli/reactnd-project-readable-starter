@@ -84,8 +84,7 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    const { dispatchGetAllCategories, dispatchGetAllPosts } = this.props;
-    dispatchGetAllCategories();
+    const { dispatchGetAllPosts } = this.props;
     dispatchGetAllPosts();
   }
 
@@ -181,14 +180,10 @@ class App extends React.Component {
               type="temporary"
               open={this.state.mobileOpen}
               onClose={this.handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true // Better open performance on mobile.
-              }}
-              categories={categories}
             />
           </Hidden>
           <Hidden smDown implementation="css">
-            <Nav type="permanent" open categories={categories} />
+            <Nav type="permanent" open/>
           </Hidden>
           <main className={classes.content}>
             <Dashboard posts={posts} />
@@ -225,7 +220,6 @@ const mapStateToProp = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatchGetAllCategories: () => dispatch(fetchCategories()),
   dispatchGetAllPosts: () => dispatch(fetchPosts()),
   dispatchPostSubmitted: post => dispatch(submitNewPost(post)),
   dispatchEditedPostSubmitted: post => dispatch(submitEditedPost(post)),
