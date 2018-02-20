@@ -21,7 +21,7 @@ export const categories = (
     case REQUEST_CATEGORIES:
       return {
         isFetching: true,
-        item: [...state.items]
+        items: [...state.items]
       };
     case RECEIVE_CATEGORIES: {
       return {

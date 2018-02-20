@@ -23,6 +23,7 @@ import {
   closePostEditor
 } from './appActions';
 import { postNewPost, putEditedPost } from '../commons/ReadableAPI';
+import BlankPostEditor from '../post-editor/containers/BlankPostEditor';
 
 const drawerWidth = 150;
 
@@ -80,7 +81,8 @@ class App extends React.Component {
     categories: [],
     posts: [],
     selectedCategory: 'all',
-    mobileOpen: false
+    mobileOpen: false,
+    postEditorOpened: false
   };
 
   componentDidMount() {
@@ -168,7 +170,7 @@ class App extends React.Component {
                 mini
                 color="default"
                 aria-label="add"
-                onClick={() => this.props.openPostEditor()}
+                onClick={() => this.setState({postEditorOpened: true})}
                 className={classes.button}
               >
                 <AddIcon />
@@ -191,12 +193,13 @@ class App extends React.Component {
         </div>
 
         {/* modal post creator */}
-        <PostEditor
+        {/* <PostEditor
           open={this.props.postEditor.open}
           handleClose={this.handleClosePostEditor}
           categories={this.props.categories.items}
           post={this.props.postEditor.post}
-        />
+        /> */}
+        <BlankPostEditor open={this.state.postEditorOpened} />
       </div>
     );
   }
