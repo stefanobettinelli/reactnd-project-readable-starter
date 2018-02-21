@@ -5,7 +5,8 @@ import {
   getCommentsForPost,
   addCommentToPost,
   deleteCommentFromPost,
-  putEditedComment
+  putEditedComment,
+  submitVoteComment
 } from '../commons/ReadableAPI';
 import { requestPostsByCategory } from '../nav/navActions';
 
@@ -42,26 +43,49 @@ export const fetchPostsByCategory = category => dispatch => {
   );
 };
 
-// change vote - start
-export const REQUEST_CHANGE_VOTE = 'REQUEST_CHANGE_VOTE';
-export const RECEIVE_CHANGE_VOTE_RESULT = 'RECEIVE_CHANGE_VOTE_RESULT';
+// change post vote - start
+export const REQUEST_CHANGE_VOTE_TO_POST = 'REQUEST_CHANGE_VOTE_TO_POST';
+export const RECEIVE_CHANGE_VOTE_TO_POST_RESULT =
+  'RECEIVE_CHANGE_VOTE_TO_POST_RESULT';
 
-const requestVoteChange = () => ({
-  type: REQUEST_CHANGE_VOTE
+const requestVoteChangeToPost = () => ({
+  type: REQUEST_CHANGE_VOTE_TO_POST
 });
 
-const receiveChangeVoteResult = post => ({
-  type: RECEIVE_CHANGE_VOTE_RESULT,
+const receiveChangeVoteToPostResult = post => ({
+  type: RECEIVE_CHANGE_VOTE_TO_POST_RESULT,
   post
 });
-// change vote - start
 
 export const fetchChangedVotePost = (voteScore, postId) => dispatch => {
-  dispatch(requestVoteChange());
+  dispatch(requestVoteChangeToPost());
   return submitVotePost(voteScore, postId).then(post =>
-    dispatch(receiveChangeVoteResult(post))
+    dispatch(receiveChangeVoteToPostResult(post))
   );
 };
+// change post vote - start
+
+// change comment vote - start
+export const REQUEST_CHANGE_VOTE_TO_COMMENT = 'REQUEST_CHANGE_VOTE_TO_COMMENT';
+export const RECEIVE_CHANGE_VOTE_TO_COMMENT_RESULT =
+  'RECEIVE_CHANGE_VOTE_TO_COMMENT_RESULT';
+
+const requestVoteChangeToComment = () => ({
+  type: REQUEST_CHANGE_VOTE_TO_COMMENT
+});
+
+const receiveChangeVoteToCommentResult = comment => ({
+  type: RECEIVE_CHANGE_VOTE_TO_COMMENT_RESULT,
+  comment
+});
+
+export const fetchChangedVoteComment = (voteScore, commentId) => dispatch => {
+  dispatch(requestVoteChangeToComment());
+  return submitVoteComment(voteScore, commentId).then(comment =>
+    dispatch(receiveChangeVoteToCommentResult(comment))
+  );
+};
+// change comment vote - start
 
 // post comments - start
 export const REQUEST_POST_COMMENTS = 'REQUEST_POST_COMMENTS';

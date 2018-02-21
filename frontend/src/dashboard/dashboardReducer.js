@@ -1,8 +1,8 @@
 import {
   REQUEST_POSTS,
   RECEIVE_POSTS,
-  RECEIVE_CHANGE_VOTE_RESULT,
-  REQUEST_CHANGE_VOTE,
+  REQUEST_CHANGE_VOTE_TO_POST,
+  RECEIVE_CHANGE_VOTE_TO_POST_RESULT,
   UPDATE_POST_COMMENT_COUNTER
 } from './dashboardActions';
 
@@ -21,7 +21,7 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
     case REQUEST_POST_SUBMISSION:
     case REQUEST_EDIT_POST_SUBMISSION:
     case REQUEST_DELETE_POST:
-    case REQUEST_CHANGE_VOTE:
+    case REQUEST_CHANGE_VOTE_TO_POST:
       return {
         isFetching: true,
         items: { ...state.items }
@@ -45,7 +45,7 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
           }
         }
       };
-    case RECEIVE_CHANGE_VOTE_RESULT:
+    case RECEIVE_CHANGE_VOTE_TO_POST_RESULT:
     case RECEIVE_POST_SUBMISSION_RESULT:
     case RECEIVE_DELETE_POST_RESULT:
     case RECEIVE_EDITED_POST_SUBMISSION_RESULT: {

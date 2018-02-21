@@ -59,6 +59,22 @@ export const submitVotePost = (voteScore, id) =>
     .then(res => res.json())
     .catch(error => console.log(error));
 
+export const submitVoteComment = (voteScore, id) =>
+  fetch(`${url}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body:
+      voteScore > 0
+        ? JSON.stringify({ option: 'upVote' })
+        : JSON.stringify({ option: 'downVote' })
+  })
+    .then(handleErrors)
+    .then(res => res.json())
+    .catch(error => console.log(error));
+
 // Edit post
 export const putEditedPost = post =>
   fetch(`${url}/posts/${post.id}`, {
@@ -119,7 +135,7 @@ export const addCommentToPost = comment =>
 export const deleteCommentFromPost = comment =>
   fetch(`${url}/comments/${comment.id}`, {
     method: 'DELETE',
-    headers: {...headers, 'Content-Type': 'application/json'},
+    headers: { ...headers, 'Content-Type': 'application/json' },
     body: JSON.stringify(comment)
   })
     .then(handleErrors)

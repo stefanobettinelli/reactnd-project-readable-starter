@@ -49,8 +49,8 @@ class Comment extends React.Component {
   }
 
   render() {
-    const { comment, editMode } = this.state;
-    const { classes, deleteComment } = this.props;
+    const { comment, editMode } = this.state; //used for editing the comment as a controlled component
+    const { classes, deleteComment, onVoteChange } = this.props;
     const propComment = this.props.comment;
     return (
       <Card className={classes.card}>
@@ -98,7 +98,7 @@ class Comment extends React.Component {
         </CardContent>
         {!editMode && (
           <CardActions className={classes.actions} disableActionSpacing>
-            <Vote item={comment} updateVoteToItem={() => console.log('suka')} />
+            <Vote item={propComment} updateVoteToItem={onVoteChange} />
             {getFormattedDate(comment.timestamp)}
             <div className={classes.commentButtons}>
               <IconButton

@@ -6,7 +6,9 @@ import {
   REQUEST_DELETE_COMMENT,
   RECEIVE_DELETE_COMMENT_RESULT,
   REQUEST_EDIT_COMMENT,
-  RECEIVE_EDIT_COMMENT_RESULT
+  RECEIVE_EDIT_COMMENT_RESULT,
+  REQUEST_CHANGE_VOTE_TO_COMMENT,
+  RECEIVE_CHANGE_VOTE_TO_COMMENT_RESULT,
 } from './dashboardActions';
 
 const comments = (state = { isFetching: false, items: {} }, action) => {
@@ -15,6 +17,7 @@ const comments = (state = { isFetching: false, items: {} }, action) => {
     case REQUEST_POST_COMMENTS:
     case REQUEST_DELETE_COMMENT:
     case REQUEST_EDIT_COMMENT:
+    case REQUEST_CHANGE_VOTE_TO_COMMENT:
       return {
         isFetching: true,
         ...state
@@ -50,6 +53,7 @@ const comments = (state = { isFetching: false, items: {} }, action) => {
     }
     case RECEIVE_EDIT_COMMENT_RESULT:
     case RECEIVE_SUBMIT_COMMENT_RESULT:
+    case RECEIVE_CHANGE_VOTE_TO_COMMENT_RESULT:
       return {
         isFetching: false,
         items: {
