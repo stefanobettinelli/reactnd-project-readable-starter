@@ -1,7 +1,7 @@
 import React from 'react';
 import DashboardPost from './containers/DashboardPost';
 
-const Dashboard = ({ posts, filter }) => {
+const Dashboard = ({ posts }) => {
   const postIds = Object.keys(posts);
   return (
     <div>

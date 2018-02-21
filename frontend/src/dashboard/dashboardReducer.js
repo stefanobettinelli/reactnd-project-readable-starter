@@ -1,18 +1,19 @@
 import {
   REQUEST_POSTS,
   RECEIVE_POSTS,
-  RECEIVE_CHANGED_VOTE,
+  RECEIVE_CHANGE_VOTE_RESULT,
   REQUEST_CHANGE_VOTE,
   UPDATE_POST_COMMENT_COUNTER
 } from './dashboardActions';
+
 import {
-  RECEIVE_POST_SUBMISSION_RESULT,
   REQUEST_POST_SUBMISSION,
+  RECEIVE_POST_SUBMISSION_RESULT,
   REQUEST_EDIT_POST_SUBMISSION,
   RECEIVE_EDITED_POST_SUBMISSION_RESULT,
   REQUEST_DELETE_POST,
   RECEIVE_DELETE_POST_RESULT
-} from '../app/appActions';
+} from '../post-editor/postEditorActions';
 
 const posts = (state = { isFetching: false, items: {} }, action) => {
   switch (action.type) {
@@ -43,8 +44,8 @@ const posts = (state = { isFetching: false, items: {} }, action) => {
             commentCount: state.items[action.postId].commentCount + action.val
           }
         }
-      }
-    case RECEIVE_CHANGED_VOTE:
+      };
+    case RECEIVE_CHANGE_VOTE_RESULT:
     case RECEIVE_POST_SUBMISSION_RESULT:
     case RECEIVE_DELETE_POST_RESULT:
     case RECEIVE_EDITED_POST_SUBMISSION_RESULT: {

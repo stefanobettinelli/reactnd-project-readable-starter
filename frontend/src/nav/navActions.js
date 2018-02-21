@@ -11,7 +11,12 @@ export const selectCategory = categoryName => ({
   categoryName
 });
 
-export const requestCategories = () => ({
+export const requestPostsByCategory = () => ({
+  type: REQUEST_POSTS_BY_CATEGORY
+});
+
+// request-receive categories - start
+const requestCategories = () => ({
   type: REQUEST_CATEGORIES
 });
 
@@ -26,7 +31,4 @@ export const fetchCategories = () => dispatch => {
     dispatch(receiveCategories(categories))
   );
 };
-
-export const requestPostsByCategory = () => ({
-  type: REQUEST_POSTS_BY_CATEGORY
-});
+// request-receive categories - end

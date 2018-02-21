@@ -8,7 +8,7 @@ import {
   updatePostCommentCounter,
   fetchDeleteComment
 } from '../dashboardActions';
-import { openPostEditor, submitDeletePost } from '../../app/appActions';
+import { submitDeletePost } from '../../post-editor/postEditorActions';
 
 import Post from '../components/Post';
 
@@ -45,7 +45,6 @@ class DashboardPost extends React.Component {
     const {
       post,
       updateVoteToPost,
-      openPostEditor,
       deleteThePost,
       getPostComments,
       comments,
@@ -57,7 +56,6 @@ class DashboardPost extends React.Component {
         post={post}
         postComments={postComments}
         updateVoteToPost={updateVoteToPost}
-        openPostEditor={openPostEditor}
         deleteThePost={deleteThePost}
         deletePostComments={deletePostComments}
         getPostComments={getPostComments}
@@ -74,7 +72,6 @@ const mapStateToProps = ({ comments }) => ({
 const mapDispatchToProps = dispatch => ({
   updateVoteToPost: (voteScore, postId) =>
     dispatch(fetchChangedVotePost(voteScore, postId)),
-  openPostEditor: post => dispatch(openPostEditor(post)),
   deleteThePost: post => dispatch(submitDeletePost(post)),
   getPostComments: post => dispatch(fetchPostComments(post)),
   submitPostCommet: comment => dispatch(postComment(comment)),

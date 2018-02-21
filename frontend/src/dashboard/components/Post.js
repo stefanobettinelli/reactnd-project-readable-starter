@@ -11,6 +11,7 @@ import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card';
 import Vote from '../components/Vote';
 import { getFormattedDate } from '../../commons/Utils';
 import PostComment from '../containers/PostComment';
+import GlobalPostEditor from '../../post-editor/containers/GlobalPostEditor';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -39,7 +40,16 @@ class Post extends React.Component {
   state = {
     commentsExpanded: false,
     commentAuthor: '',
-    commentText: ''
+    commentText: '',
+    postEditorOpen: false
+  };
+
+  handleOpenEditor = () => {
+    this.setState({ postEditorOpen: true });
+  };
+
+  handleClosePostEditor = () => {
+    this.setState({ postEditorOpen: false });
   };
 
   render() {
@@ -47,7 +57,6 @@ class Post extends React.Component {
       post,
       classes,
       updateVoteToPost,
-      openPostEditor,
       deleteThePost,
       getPostComments,
       postComments,
@@ -56,25 +65,23 @@ class Post extends React.Component {
     } = this.props;
     const { commentsExpanded, commentText, commentAuthor } = this.state;
     const formattedTimeStamp = getFormattedDate(post.timestamp);
-
     return (
       <Card className={classes.root}>
         <CardHeader
           action={
             <div>
-              <IconButton
-                onClick={() => openPostEditor(post)}
-                aria-label="Edit"
-              >
+              <IconButton onClick={this.handleOpenEditor} aria-label="Edit">
                 <EditIcon />
               </IconButton>
               <IconButton
                 onClick={() => {
-                  const commentList = Object.keys(postComments).map(
-                    id => postComments[id]
-                  );
+                  if (postComments) {
+                    const commentList = Object.keys(postComments).map(
+                      id => postComments[id]
+                    );
+                    deletePostComments(commentList);
+                  }
                   deleteThePost(post);
-                  deletePostComments(commentList);
                 }}
                 aria-label="Delete"
               >
@@ -83,7 +90,7 @@ class Post extends React.Component {
             </div>
           }
           title={`${post.title}`}
-          subheader={`${post.author} ${formattedTimeStamp}`}
+          subheader={`${post.author} ${formattedTimeStamp} (posted on ${post.category})`}
         />
         <CardContent>
           <Typography component="p">{post.body}</Typography>
@@ -166,6 +173,12 @@ class Post extends React.Component {
                 </div>
               ))}
         </Collapse>
+        <GlobalPostEditor
+          post={post}
+          open={this.state.postEditorOpen}
+          handleClose={this.handleClosePostEditor}
+          isNewPost={false}
+        />
       </Card>
     );
   }

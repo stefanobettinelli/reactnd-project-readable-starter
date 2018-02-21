@@ -27,6 +27,38 @@ const styles = theme => ({
 });
 
 class PostEditor extends React.Component {
+  state = {
+    author: '',
+    title: '',
+    category: '',
+    body: ''
+  };
+
+  resetFields = () => {
+    this.setState({
+      author: '',
+      title: '',
+      category: '',
+      body: ''
+    });
+  };
+
+  onChangeAuthor = author => this.setState({ author });
+  onChangeTitle = title => this.setState({ title });
+  onChangeBody = body => this.setState({ body });
+  onChangeCategory = category => this.setState({ category });
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isNewPost) return;
+    const { author, title, category, body } = nextProps.post;
+    this.setState({
+      author,
+      title,
+      category,
+      body
+    });
+  }
+
   render() {
     const {
       categories,
@@ -34,26 +66,16 @@ class PostEditor extends React.Component {
       open,
       handleClose,
       post,
-      onChangeAuthor,
-      onChangeBody,
-      handleChangeCategory,
-      onChangeTitle,
+      handleSubmit,
       isNewPost
     } = this.props;
-    const { author, category, title, body } = isNewPost
-      ? post
-      : {
-          author: '',
-          category: '',
-          title: '',
-          body: ''
-        };
+    const { author, title, category, body } = this.state;
 
     return (
       <form className={classes.container} autoComplete="off">
         <Dialog
           open={open}
-          onClose={handleClose}
+          onClose={() => {this.resetFields(); handleClose()}}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">
@@ -67,15 +89,15 @@ class PostEditor extends React.Component {
               id="author"
               label="Author"
               fullWidth
-              onChange={onChangeAuthor}
-              value={author || ''}
+              onChange={event => this.onChangeAuthor(event.target.value)}
+              value={author}
             />
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="category">Category</InputLabel>
               <Select
                 disabled={!isNewPost}
-                value={category || ''}
-                onChange={handleChangeCategory}
+                value={category}
+                onChange={event => this.onChangeCategory(event.target.value)}
                 input={<Input name="category" id="category-helper" />}
               >
                 {categories &&
@@ -92,8 +114,8 @@ class PostEditor extends React.Component {
               id="title"
               label="Title"
               fullWidth
-              onChange={onChangeTitle}
-              value={title || ''}
+              onChange={event => this.onChangeTitle(event.target.value)}
+              value={title}
             />
             <TextField
               multiline
@@ -102,18 +124,25 @@ class PostEditor extends React.Component {
               id="body"
               label="Body"
               fullWidth
-              onChange={onChangeBody}
-              value={body || ''}
+              onChange={event => this.onChangeBody(event.target.value)}
+              value={body}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={() => {this.resetFields(); handleClose()}} color="primary">
               Cancel
             </Button>
             <Button
               onClick={() => {
-                handleClose(post, isNewPost);
-              }}
+                handleSubmit(
+                  isNewPost
+                    ? { ...this.state }
+                    : { ...this.state, id: post.id, timestamp: post.timestamp },
+                  isNewPost
+                );
+                this.resetFields();
+              }
+              }
               color="primary"
               disabled={!author || !category || !title || !body}
             >
