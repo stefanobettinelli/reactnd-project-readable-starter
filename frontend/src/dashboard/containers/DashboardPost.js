@@ -9,7 +9,6 @@ import {
   fetchDeleteComment
 } from '../dashboardActions';
 import { submitDeletePost } from '../../post-editor/postEditorActions';
-
 import Post from '../components/Post';
 
 class DashboardPost extends React.Component {
@@ -48,7 +47,9 @@ class DashboardPost extends React.Component {
       deleteThePost,
       getPostComments,
       comments,
-      deletePostComments
+      deletePostComments,
+      expandComments,
+      disableLink
     } = this.props;
     const postComments = comments[post.id];
     return (
@@ -60,6 +61,8 @@ class DashboardPost extends React.Component {
         deletePostComments={deletePostComments}
         getPostComments={getPostComments}
         submitComment={this.submitComment}
+        expandComments={expandComments} 
+        disableLink={disableLink}
       />
     );
   }

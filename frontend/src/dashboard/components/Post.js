@@ -53,6 +53,11 @@ class Post extends React.Component {
     this.setState({ postEditorOpen: false });
   };
 
+  componentDidMount() {
+    const { expandComments } = this.props;
+    expandComments && this.setState({ commentsExpanded: expandComments });
+  }
+
   render() {
     const {
       post,
@@ -62,7 +67,8 @@ class Post extends React.Component {
       getPostComments,
       postComments,
       deletePostComments,
-      submitComment
+      submitComment,
+      disableLink
     } = this.props;
     const { commentsExpanded, commentText, commentAuthor } = this.state;
     const formattedTimeStamp = getFormattedDate(post.timestamp);
@@ -91,12 +97,16 @@ class Post extends React.Component {
             </div>
           }
           title={
-            <Link
-              to={`/${post.category}/${post.id}`}
-              style={{ textDecoration: 'none' }}
-            >
-              {post.title}
-            </Link>
+            disableLink ? (
+              post.title
+            ) : (
+              <Link
+                to={`/${post.category}/${post.id}`}
+                style={{ textDecoration: 'none' }}
+              >
+                {post.title}
+              </Link>
+            )
           }
           subheader={`${post.author} ${formattedTimeStamp} (posted on ${
             post.category

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import App from '../components/App';
 import { Route } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import PostEditor from '../../post-editor/components/PostEditor';
+import SinglePostView from '../../dashboard/containers/SinglePostView';
 
 class AppContainer extends React.Component {
   state = {
@@ -17,12 +17,11 @@ class AppContainer extends React.Component {
 
   componentDidMount() {
     const { dispatchGetAllPosts } = this.props;
-    dispatchGetAllPosts();
+    dispatchGetAllPosts().then(res => this.setState({ posts: res.posts }));
   }
 
   componentWillReceiveProps(nextProps) {
     const {
-      dispatchGetAllPosts,
       dispatchFetchPostByCategory,
       posts,
       selectedCategory,
@@ -41,14 +40,13 @@ class AppContainer extends React.Component {
       isValidCategory &&
       this.state.selectedCategory !== selectedCategory
     ) {
-      if (selectedCategory === 'all') dispatchGetAllPosts();
-      else dispatchFetchPostByCategory(selectedCategory);
+      dispatchFetchPostByCategory(selectedCategory).then(() =>
+        this.setState({
+          selectedCategory,
+          posts: posts.items
+        })
+      );
     }
-    
-    this.setState({
-      selectedCategory,
-      posts: posts.items
-    });
   }
 
   render() {
@@ -60,16 +58,28 @@ class AppContainer extends React.Component {
           exact={selectedCategory === 'all'}
           path={selectedCategory === 'all' ? '/' : `/${selectedCategory}`}
           render={() => {
-            return <App posts={posts} selectedCategory={selectedCategory} />;
+            return (
+              <App
+                posts={posts}
+                selectedCategory={this.state.selectedCategory}
+              />
+            );
           }}
         />
         <Route
           exact
           path="/:category/:postId"
-          render={() => {
-            return <PostEditor open={true} />;
+          render={({ history, match }) => {
+            const postId = match.params.postId;
+            return (
+              <SinglePostView
+                open={true}
+                post={posts[postId]}
+                history={history}
+              />
+            );
           }}
-        />      
+        />
       </div>
     );
   }

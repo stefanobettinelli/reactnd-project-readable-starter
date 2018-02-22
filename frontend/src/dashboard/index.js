@@ -8,7 +8,7 @@ const Dashboard = ({ posts }) => {
       {posts &&
         postIds
           .filter(id => !posts[id].deleted)
-          .map(id => <DashboardPost key={id} post={posts[id]} />)}
+          .map(id => <DashboardPost key={id} post={posts[id]} disableLink={false}/>)}
     </div>
   );
 };
