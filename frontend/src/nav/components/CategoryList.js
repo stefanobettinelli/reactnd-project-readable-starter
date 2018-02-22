@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import Drawer from 'material-ui/Drawer';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 150;
 
@@ -48,27 +49,34 @@ const CategoryList = ({
       </div>
       <Divider />
       <List>
-        <ListItem
-          onClick={() => {
-            selectedCategory !== 'all' && selectCategory('all');
-          }}
-          button
-        >
-          <ListItemText primary="all" />
-        </ListItem>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <ListItem
+            onClick={() => {
+              selectedCategory !== 'all' && selectCategory('all');
+            }}
+            button
+          >
+            <ListItemText primary="all" />
+          </ListItem>
+        </Link>
         {categories &&
           categories.length > 0 &&
           categories.map(category => (
-            <ListItem
+            <Link
               key={category.name}
-              onClick={() => {
-                selectedCategory !== category.name &&
-                  selectCategory(category.name);
-              }}
-              button
+              to={category.name}
+              style={{ textDecoration: 'none' }}
             >
-              <ListItemText primary={category.name} />
-            </ListItem>
+              <ListItem
+                onClick={() => {
+                  selectedCategory !== category.name &&
+                    selectCategory(category.name);
+                }}
+                button
+              >
+                <ListItemText primary={category.name} />
+              </ListItem>
+            </Link>
           ))}
       </List>
     </div>

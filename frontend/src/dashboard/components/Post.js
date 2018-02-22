@@ -12,6 +12,7 @@ import Vote from '../components/Vote';
 import { getFormattedDate } from '../../commons/Utils';
 import PostComment from '../containers/PostComment';
 import GlobalPostEditor from '../../post-editor/containers/GlobalPostEditor';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
@@ -89,8 +90,17 @@ class Post extends React.Component {
               </IconButton>
             </div>
           }
-          title={`${post.title}`}
-          subheader={`${post.author} ${formattedTimeStamp} (posted on ${post.category})`}
+          title={
+            <Link
+              to={`/${post.category}/${post.id}`}
+              style={{ textDecoration: 'none' }}
+            >
+              {post.title}
+            </Link>
+          }
+          subheader={`${post.author} ${formattedTimeStamp} (posted on ${
+            post.category
+          })`}
         />
         <CardContent>
           <Typography component="p">{post.body}</Typography>

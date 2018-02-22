@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { selectCategory } from '../navActions';
-import { fetchPostsByCategory } from '../../dashboard/dashboardActions';
+import { selectCategory, fetchCategories } from '../navActions';
 import CategoryList from '../components/CategoryList';
-import { fetchCategories } from '../navActions';
 
 class CategoryListContainer extends React.Component {
   componentDidMount() {
@@ -18,7 +16,7 @@ class CategoryListContainer extends React.Component {
       onClose,
       categories,
       selectedCategory,
-      selectCategory // on category select
+      dispatchSelectCategory // on category select
     } = this.props;
     return (
       <CategoryList
@@ -26,7 +24,7 @@ class CategoryListContainer extends React.Component {
         onClose={onClose}
         categories={categories}
         selectedCategory={selectedCategory}
-        selectCategory={selectCategory}
+        selectCategory={dispatchSelectCategory}
         type={type}
       />
     );
@@ -40,9 +38,8 @@ const mapStateToProps = ({ selectedCategory, categories }) => ({
 
 const mapDispatchToProps = dispatch => ({
   dispatchGetAllCategories: () => dispatch(fetchCategories()),
-  selectCategory: data => {
+  dispatchSelectCategory: data => {
     dispatch(selectCategory(data));
-    dispatch(fetchPostsByCategory(data));
   }
 });
 
