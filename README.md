@@ -1,22 +1,18 @@
-# Readable API Server
+# MyReads App
 
-This is the starter project for the final assessment project for Udacity's Redux course where you will build a content and comment web app. Users will be able to post content to predefined categories, comment on their posts and other users' posts, and vote on posts and comments. Users will also be able to edit and delete posts and comments.
+Readable is a content and comment web app. Users will be able to post content to predefined categories, comment on their posts and other users' posts, and vote on posts and comments. Users will also be able to edit and delete posts and comments.
 
-This repository includes the code for the backend API Server that you'll use to develop and interact with the front-end portion of the project.
+Built on top of the [starter template](https://github.com/udacity/reactnd-project-readable-starter) for the final assessment project for Udacity's React & Redux course, developed by [React Training](https://reacttraining.com). 
 
-## Start Developing
+## Quickstart
 
-To get started developing right away:
+1. Clone/Download the repo: inside the folder you will find 2 subfolder, one for the backend server `/api-server` and one for the frontend `/frontend`
+2. `cd` into each of the two subfolders and run `npm install` to download and install their respective dependencies
+3. Start the server, from the root folder run the command `cd api-server/` and then `node server`
+4. Start the frontend, from the root folder run the command `cd frontend/` and then `npm start`
 
-* Install and start the API server
-    - `cd api-server`
-    - `npm install`
-    - `node server`
-* In another terminal window, use Create React App to scaffold out the front-end
-    - `create-react-app frontend`
-    - `cd frontend`
-    - `npm start`
+`localhost:3000` should open in a browser tab/window
 
-## API Server
+## Note on Searching feature
 
-Information about the API server and how to use it can be found in its [README file](api-server/README.md).
+The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised if your searches for Basket Weaving or Bubble Wrap don't come back with any results. 
