@@ -8,13 +8,10 @@ class Dashboard extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { posts } = nextProps;
-    const oldSorting = this.props.sorting;
-    const newSorting = nextProps.sorting;
     let postList = posts;
     const sortBy = nextProps.sorting.sortBy;
     const sortMethod = nextProps.sorting.sortMethod;
-    
-    console.log(sortMethod);
+
     postList = postList.sort(
       (postA, postB) =>
         sortMethod === 'asc'
