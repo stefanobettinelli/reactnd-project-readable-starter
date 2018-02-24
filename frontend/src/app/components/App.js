@@ -191,7 +191,7 @@ class SortMenu extends React.Component {
 
   handleClose = sortBy => {
     this.setState({ anchorEl: null, sortingMethod: sortBy });
-    sortBy && sortBy('asc');
+    sortBy && sortBy('desc');
   };
 
   render() {
@@ -231,18 +231,20 @@ class SortMenu extends React.Component {
             Vote Score
           </MenuItem>
         </Menu>
-        <IconButton
-          style={{ color: 'white' }}
+        <Button
+          style={{ color: 'white' }}          
           onClick={() => sortingMethod && sortingMethod('asc')}
         >
-          <ExpandMore />
-        </IconButton>
-        <IconButton
+          ASC
+          <ExpandLess />
+        </Button>
+        <Button
           style={{ color: 'white' }}
           onClick={() => sortingMethod && sortingMethod('desc')}
         >
-          <ExpandLess />
-        </IconButton>
+          DESC
+          <ExpandMore />          
+        </Button>
       </div>
     );
   }
