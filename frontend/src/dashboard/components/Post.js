@@ -103,6 +103,7 @@ class Post extends React.Component {
             ) : (
               <Link
                 to={`/${post.category}/${post.id}`}
+                onClick={() => this.setState({commentsExpanded: false})}
                 style={{ textDecoration: 'none' }}
               >
                 {post.title}
