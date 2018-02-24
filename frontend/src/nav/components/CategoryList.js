@@ -10,11 +10,15 @@ const drawerWidth = 150;
 
 const styles = theme => ({
   root: {
-    position: 'fixed',
+    position: 'fixed',    
     width: drawerWidth
   },
-  drawerHeader: theme.mixins.toolbar,
+  drawerHeader: {
+    height: '64px',
+    textAlign: 'center'
+  },
   drawerPaper: {
+    border: '0px',
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: drawerWidth,
@@ -45,7 +49,7 @@ const CategoryList = ({
   >
     <div className={classes.root}>
       <div className={classes.drawerHeader}>
-        <Typography type="title">Readable</Typography>
+        <Typography style={{padding: '20px'}} type="title">Readable</Typography>
       </div>
       <Divider />
       <List>

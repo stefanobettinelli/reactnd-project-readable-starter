@@ -11,6 +11,9 @@ import Button from 'material-ui/Button';
 import Dashboard from '../../dashboard';
 import Nav from '../../nav';
 import GlobalPostEditor from '../../post-editor/containers/GlobalPostEditor';
+import Menu, { MenuItem } from 'material-ui/Menu';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+import ExpandLess from 'material-ui-icons/ExpandLess';
 
 const drawerWidth = 150;
 
@@ -25,10 +28,10 @@ const styles = theme => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
-    width: '100%',
-    height: '100%'
+    width: '100%'
   },
   appBar: {
+    background: 'linear-gradient(to right, #E29587, #D66D75)',
     position: 'fixed',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
@@ -51,13 +54,14 @@ const styles = theme => ({
     }
   },
   content: {
-    backgroundColor: theme.palette.background.default,
+    background: 'linear-gradient(to right, #86fde8, #acb6e5)',
     width: '100%',
     padding: theme.spacing.unit * 3,
-    height: 'calc(100% - 56px)',
+    // height: 'calc(100% - 56px)',
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
-      height: 'calc(100% - 64px)',
+      position: 'relative',
+      // height: 'calc(100% - 64px)',
       marginTop: 64
     }
   }
@@ -66,7 +70,11 @@ const styles = theme => ({
 class App extends React.Component {
   state = {
     mobileOpen: false,
-    postEditorOpen: false
+    postEditorOpen: false,
+    sorting: {
+      sortBy: 'timestamp',
+      sortMethod: 'desc'
+    }
   };
 
   handleDrawerToggle = () => {
@@ -81,8 +89,30 @@ class App extends React.Component {
     this.setState({ postEditorOpen: false });
   };
 
+  sortByDate = orderingMethod => {
+    this.setState({
+      sorting: {
+        sortBy: 'timestamp',
+        sortMethod: orderingMethod
+      }
+    });
+  };
+
+  sortByVoteScore = orderingMethod => {
+    this.setState({
+      sorting: {
+        sortBy: 'voteScore',
+        sortMethod: orderingMethod
+      }
+    });
+  };
+
   render() {
-    const { classes, posts, selectedCategory } = this.props;
+    const {
+      classes,
+      posts,
+      selectedCategory
+    } = this.props;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -104,6 +134,10 @@ class App extends React.Component {
               >
                 {selectedCategory.toUpperCase()}
               </Typography>
+              <SortMenu
+                sortByDate={this.sortByDate}
+                sortByVoteScore={this.sortByVoteScore}
+              />
               <Button
                 fab
                 mini
@@ -127,7 +161,7 @@ class App extends React.Component {
             <Nav type="permanent" open />
           </Hidden>
           <main className={classes.content}>
-            <Dashboard posts={posts} />
+            <Dashboard posts={posts} sorting={this.state.sorting} />
           </main>
         </div>
 
@@ -143,3 +177,73 @@ class App extends React.Component {
 }
 
 export default withStyles(styles, { withTheme: true })(App);
+
+class SortMenu extends React.Component {
+  state = {
+    anchorEl: null,
+    sortingMethod: undefined,
+    sortBy: ''
+  };
+
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = sortBy => {
+    this.setState({ anchorEl: null, sortingMethod: sortBy });
+    sortBy && sortBy('asc');
+  };
+
+  render() {
+    const { sortByDate, sortByVoteScore } = this.props;
+    const { anchorEl, sortingMethod } = this.state;
+
+    return (
+      <div>
+        <Button
+          aria-owns={anchorEl ? 'simple-menu' : null}
+          aria-haspopup="true"
+          style={{ color: 'white' }}
+          onClick={this.handleClick}
+        >
+          Sort By: {this.state.sortBy}
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => this.handleClose(null)}
+        >
+          <MenuItem
+            onClick={() => {
+              this.setState({ sortBy: 'Date' });
+              this.handleClose(sortByDate);
+            }}
+          >
+            Date
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              this.setState({ sortBy: 'Score' });
+              this.handleClose(sortByVoteScore);
+            }}
+          >
+            Vote Score
+          </MenuItem>
+        </Menu>
+        <IconButton
+          style={{ color: 'white' }}
+          onClick={() => sortingMethod && sortingMethod('asc')}
+        >
+          <ExpandMore />
+        </IconButton>
+        <IconButton
+          style={{ color: 'white' }}
+          onClick={() => sortingMethod && sortingMethod('desc')}
+        >
+          <ExpandLess />
+        </IconButton>
+      </div>
+    );
+  }
+}

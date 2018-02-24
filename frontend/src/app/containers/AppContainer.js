@@ -42,11 +42,14 @@ class AppContainer extends React.Component {
     ) {
       dispatchFetchPostByCategory(selectedCategory).then(() =>
         this.setState({
-          selectedCategory,
-          posts: posts.items
+          selectedCategory          
         })
       );
     }
+
+    this.setState({
+      posts: Object.keys(posts.items).map(id => posts.items[id])
+    })
   }
 
   render() {
@@ -74,7 +77,7 @@ class AppContainer extends React.Component {
             return (
               <SinglePostView
                 open={true}
-                post={posts[postId]}
+                post={posts.filter(post => post.id === postId)[0]}
                 history={history}
               />
             );

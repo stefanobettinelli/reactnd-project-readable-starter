@@ -49,19 +49,23 @@ class DashboardPost extends React.Component {
       comments,
       deletePostComments,
       expandComments,
-      disableLink
-    } = this.props;
+      disableLink,
+      handleCloseSinglePostView
+    } = this.props;    
     const postComments = comments[post.id];
     return (
       <Post
         post={post}
         postComments={postComments}
         updateVoteToPost={updateVoteToPost}
-        deleteThePost={deleteThePost}
+        deleteThePost={(post) => {
+          deleteThePost(post);
+          handleCloseSinglePostView && handleCloseSinglePostView();
+        }}
         deletePostComments={deletePostComments}
         getPostComments={getPostComments}
         submitComment={this.submitComment}
-        expandComments={expandComments} 
+        expandComments={expandComments}
         disableLink={disableLink}
       />
     );
