@@ -12,7 +12,3 @@ Built on top of the [starter template](https://github.com/udacity/reactnd-projec
 4. Start the frontend, from the root folder run the command `cd frontend/` and then `npm start`
 
 `localhost:3000` should open in a browser tab/window
-
-## Note on Searching feature
-
-The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised if your searches for Basket Weaving or Bubble Wrap don't come back with any results. 
