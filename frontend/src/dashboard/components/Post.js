@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   root: theme.mixins.gutters({
+    background: '#F0FFF0',
     paddingTop: 16,
     paddingBottom: 16,
     marginTop: theme.spacing.unit * 3
@@ -148,7 +149,6 @@ class Post extends React.Component {
           <TextField
             id="textarea"
             placeholder="Write a comment..."
-            error={commentText.length === 0}
             value={commentText}
             multiline
             className={classes.textField}
@@ -164,7 +164,6 @@ class Post extends React.Component {
           />
           <TextField
             id="textarea"
-            error={commentAuthor.length === 0}
             placeholder="Author"
             className={classes.textFieldAuthor}
             margin="normal"

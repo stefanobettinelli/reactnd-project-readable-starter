@@ -14,7 +14,7 @@ import { getFormattedDate } from '../../commons/Utils';
 const styles = theme => ({
   card: {
     margin: '10px 0px 10px 0px',
-    backgroundColor: '#39CCCC'
+    backgroundColor: '#c7ecee'
   },
   commentButtons: {
     marginLeft: 'auto'

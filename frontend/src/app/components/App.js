@@ -18,7 +18,7 @@ import ExpandLess from 'material-ui-icons/ExpandLess';
 const drawerWidth = 150;
 
 const styles = theme => ({
-  root: {
+  root: {    
     width: '100%',
     // height: 430,
     // marginTop: theme.spacing.unit * 3,

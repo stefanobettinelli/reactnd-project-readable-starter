@@ -11,6 +11,7 @@ import DashboardPost from './DashboardPost';
 
 const styles = {
   appBar: {
+    background: 'linear-gradient(to right, #E29587, #D66D75)',
     position: 'relative'
   },
   flex: {
