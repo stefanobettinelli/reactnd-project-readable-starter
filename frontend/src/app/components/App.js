@@ -14,56 +14,38 @@ import GlobalPostEditor from '../../post-editor/containers/GlobalPostEditor';
 import Menu, { MenuItem } from 'material-ui/Menu';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import ExpandLess from 'material-ui-icons/ExpandLess';
+import classNames from 'classnames';
 
 const drawerWidth = 150;
 
 const styles = theme => ({
-  root: {    
+  root: {
     width: '100%',
-    // height: 430,
-    // marginTop: theme.spacing.unit * 3,
     zIndex: 1,
     overflow: 'hidden'
   },
   appFrame: {
     position: 'relative',
     display: 'flex',
-    width: '100%'
+    width: '100%',
+    // height: '100%'
   },
   appBar: {
     background: 'linear-gradient(to right, #E29587, #D66D75)',
-    position: 'fixed',
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`
-    }
-  },
-  flex: {
-    flex: 1
-  },
-  navIconHide: {
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
-    }
-  },
-  drawerPaper: {
-    width: 250,
-    [theme.breakpoints.up('md')]: {
-      width: drawerWidth,
-      position: 'relative'
-    }
+    position: 'absolute',
+    width: `calc(100% - ${drawerWidth}px)`
   },
   content: {
     background: 'linear-gradient(to right, #86fde8, #acb6e5)',
     width: '100%',
     padding: theme.spacing.unit * 3,
-    // height: 'calc(100% - 56px)',
     marginTop: 56,
     [theme.breakpoints.up('sm')]: {
-      position: 'relative',
-      // height: 'calc(100% - 64px)',
       marginTop: 64
     }
+  },
+  flex: {
+    flex: 1
   }
 });
 
@@ -108,69 +90,41 @@ class App extends React.Component {
   };
 
   render() {
-    const {
-      classes,
-      posts,
-      selectedCategory
-    } = this.props;
+    const { classes, posts, selectedCategory } = this.props;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={this.handleDrawerToggle}
-                className={classes.navIconHide}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                type="title"
-                color="inherit"
-                className={classes.flex}
-                noWrap
-              >
-                {selectedCategory.toUpperCase()}
+              <Typography className={classes.flex} color="inherit" variant="headline" gutterBottom>
+                {`Category: ${selectedCategory}`}
               </Typography>
               <SortMenu
                 sortByDate={this.sortByDate}
                 sortByVoteScore={this.sortByVoteScore}
               />
               <Button
-                fab
                 mini
                 color="default"
                 aria-label="add post"
                 onClick={this.handleOpenEditor}
-                className={classes.button}
               >
                 <AddIcon />
               </Button>
             </Toolbar>
           </AppBar>
-          <Hidden mdUp>
-            <Nav
-              type="temporary"
-              open={this.state.mobileOpen}
-              onClose={this.handleDrawerToggle}
-            />
-          </Hidden>
-          <Hidden smDown implementation="css">
-            <Nav type="permanent" open />
-          </Hidden>
+          <Nav type="permanent" open />
           <main className={classes.content}>
             <Dashboard posts={posts} sorting={this.state.sorting} />
           </main>
-        </div>
 
-        {/* modal post creator */}
-        <GlobalPostEditor
-          open={this.state.postEditorOpen}
-          handleClose={this.handleClosePostEditor}
-          isNewPost={true}
-        />
+          {/* modal post creator */}
+          <GlobalPostEditor
+            open={this.state.postEditorOpen}
+            handleClose={this.handleClosePostEditor}
+            isNewPost={true}
+          />
+        </div>
       </div>
     );
   }
@@ -232,7 +186,7 @@ class SortMenu extends React.Component {
           </MenuItem>
         </Menu>
         <Button
-          style={{ color: 'white' }}          
+          style={{ color: 'white' }}
           onClick={() => sortingMethod && sortingMethod('asc')}
         >
           ASC
@@ -243,7 +197,7 @@ class SortMenu extends React.Component {
           onClick={() => sortingMethod && sortingMethod('desc')}
         >
           DESC
-          <ExpandMore />          
+          <ExpandMore />
         </Button>
       </div>
     );
